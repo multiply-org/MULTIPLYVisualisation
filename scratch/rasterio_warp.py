@@ -14,17 +14,20 @@ gdal.Warp(
 	)
 
 ds = xr.open_rasterio(tmp_vrt)
-ds.plot()
-plt.show()
 
-print('\n\n=========================\n\n')
-print(ds)
-print(ds.max())
-print('\n\n=========================\n\n')
+# ALEX CARRY ON FROM HERE....
 
-dp = xr.open_rasterio(input_file)
+# ds.plot()
+# plt.show()
 
-print(dp)
-print(dp.max())
-dp.plot()
-plt.show()
+# print('\n\n=========================\n\n')
+# print(ds)
+# print(ds.max())
+# print('\n\n=========================\n\n')
+
+# dp = xr.open_rasterio(input_file)
+
+# print(dp)
+# print(dp.max())
+# dp.plot()
+# plt.show()

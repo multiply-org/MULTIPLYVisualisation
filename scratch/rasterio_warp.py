@@ -16,6 +16,8 @@ gdal.Warp(
 ds = xr.open_rasterio(tmp_vrt)
 
 # ALEX CARRY ON FROM HERE....
+# https://moderndata.plot.ly/weather-maps-in-python-with-mapbox-gl-xarray-and-netcdf4/
+
 
 # ds.plot()
 # plt.show()

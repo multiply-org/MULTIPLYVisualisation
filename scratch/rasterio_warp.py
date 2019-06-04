@@ -5,6 +5,9 @@ import plotly.plotly as py
 import plotly.offline as py_off
 from plotly.graph_objs import *
 
+app = dash.Dash()
+
+
 input_file = "../data/lai_A2017171.tif"
 
 tmp_vrt = 'outfile.vrt'
@@ -18,7 +21,6 @@ gdal.Warp(
 
 # open the data set
 ds = xr.open_rasterio(tmp_vrt)
-
 
 # take  subset around some interesting bits for speed
 ds = ds.isel(x=range(50,100),y=range(125,175))

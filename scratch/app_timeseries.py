@@ -33,10 +33,10 @@ data = []
   
 input_value = 'lai'
   
-pfiles = sorted(glob.glob('data/%s*.tif'%input_value))
+pfiles = sorted(glob.glob('../data/%s*.tif'%input_value))
 
 if len(pfiles) == 0:
-    pfiles = sorted(glob.glob('data/lai*.tif'))
+    pfiles = sorted(glob.glob('../data/lai*.tif'))
 
 pfiles = [i for i in pfiles if 'unc' not in i]
 

@@ -25,3 +25,25 @@ ds = xr.open_rasterio("../data/lai_A2017156.tif")
 # df_sub = df.loc['1980-09-16']
 
 print(ds)
+
+
+
+def in_latlon(da):
+	"""
+	https://anaconda.org/jhamman/rasterio_to_xarray/notebook
+	"""
+
+    if 'crs' in da.attrs:
+        proj = pyproj.Proj(da.attrs['crs'])
+        x, y = np.meshgrid(da['x'], da['y'])
+        proj_out = pyproj.Proj("+init=EPSG:4326", preserve_units=True)
+        xc, yc = transform_proj(proj, proj_out, x, y)
+        coords = dict(y = da['y'], x=da['x'])
+        dims = ('y', 'x')
+        
+        da.coords['latitude'] = xr.DataArray(yc, coords=coords, dims=dims, name='latitude',
+                                             attrs={'units': 'degrees_north', 'long_name': 'latitude', 'standard_name': 'latitude'})
+        da.coords['longitude'] = xr.DataArray(xc, coords=coords, dims=dims, name='latitude',
+                                             attrs={'units': 'degrees_east', 'long_name': 'longitude', 'standard_name': 'longitude'})
+    
+    return da

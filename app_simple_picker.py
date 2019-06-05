@@ -48,7 +48,7 @@ app.layout = html.Div( children=[
     
 def update_the_param(input_value):
     
-    return 'Availbale files are:\n%s'%(sorted(glob.glob('data/%s*'%input_value)))
+    return 'Available files are:\n%s'%(sorted(glob.glob('data/%s*'%input_value)))
      
 
 if __name__ == '__main__':

@@ -127,6 +127,8 @@ app.layout = html.Div( children=[
     html.H1(children='A demonstation on pulling out a pixels timeries',
             style = {'color': [0,141./256,165./256], 'textAlign': 'center'}),
 
+    html.Div(id='labeler'),
+
     # set up the generic scatter display of the data itself
     html.Div(dcc.Graph(id='scatter_of_data',
                                  figure={'data': [data[1]],'layout': {'mapbox': mapbox}})),
@@ -167,6 +169,21 @@ def update(thing_to_print):
 
     except:
         return {'data': [], 'layout': []}
+
+@app.callback(
+    dash.dependencies.Output(component_id='labeler', component_property='children'),
+    [dash.dependencies.Input(component_id='scatter_of_data', component_property='clickData')])
+def update_some_text(some_text):
+    if some_text is None:
+        return 'Please click on a data point in the window below.'
+    else:
+        try:
+            lat = some_text['points'][0]['lat']
+            lon = some_text['points'][0]['lon']
+
+            return 'Selected data point is at %s latitude, %s longitude'%(lat,lon)
+        except:
+            return 'Please click on a data point within the dataset below'
 
 if __name__ == '__main__':
     app.run_server(debug=True)

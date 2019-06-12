@@ -7,29 +7,48 @@
 # Original author: Bethan
 #
 #######################################################
-
+import dash
 
 class GenerateView:
     """This is the class which pulls together the appropriate dash building blocks in
     order to create the dash view.
     """
-    def add_parameter_to_maps():
+
+    def __init__(self, directory):
+        """
+        Set up the dash app, ready for populating
+        """
+        self.app = dash.Dash(__name__)
+
+        # Using Bethan's mapbox access token
+        # Todo: think about what to do here, is this use of token the best way forward?
+        access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsImEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
+
+    def run(self):
+        """
+        Run the app
+        :return:
+        """
+        self.app = dash.Dash(__name__)
+
+    def add_parameter_to_maps(self):
         pass
 
-    def create_new_view():
+    def create_new_view(self):
         pass
 
-    def __generate_drowpdown():
+    def __generate_drowpdown(self):
         pass
 
-    def __generate_maps():
+    def __generate_maps(self):
         pass
 
-    def __generate_timeseries():
+    def __generate_timeseries(self):
         pass
 
-    def show_new_timestep():
+    def show_new_timestep(self):
         pass
 
-    def show_timeseries():
+    def show_timeseries(self):
         pass
+

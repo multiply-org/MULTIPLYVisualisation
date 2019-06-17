@@ -8,6 +8,12 @@
 #
 #######################################################
 import dash
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+
+from src.DataHandling import DataHandling
+
 
 class GenerateView:
     """This is the class which pulls together the appropriate dash building blocks in
@@ -24,18 +30,38 @@ class GenerateView:
         # Todo: think about what to do here, is this use of token the best way forward?
         access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsImEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
 
+        # Pass this directory to the data Handler
+        self.dh = DataHandling(directory)
+
     def run(self):
         """
-        Run the app
+        Build and run the first instance of the dash application
         :return:
         """
-        self.app = dash.Dash(__name__)
+        # Extract the available parameters
+        self.create_new_view()
+
+        self.app.run_server(debug=True)
 
     def add_parameter_to_maps(self):
+
+
+        self.build_slider()
+
         pass
 
     def create_new_view(self):
-        pass
+        """
+        Instantiate the setup and layout of the dash app
+        :return:
+        """
+        # Todo: un-hard-code this once we've got the dropdown sorted.
+        parameter='lai'
+        self.data = self.dh.load_data(parameter)
+
+
+
+
 
     def __generate_drowpdown(self):
         pass
@@ -52,3 +78,18 @@ class GenerateView:
     def show_timeseries(self):
         pass
 
+    def build_slider(self):
+        """
+        Create the slider which displays the timesteps of the data
+        :return:
+        """
+        timesteps = self.data.time.values
+
+        self.slider = dcc.Slider(
+            id='time-slider',
+            min=timesteps.min().astype('int64'),
+            max=timesteps.max().astype('int64'),
+            value=timesteps[0].astype('int64'),
+            marks={timestep.astype('int64'): str(timestep)[:10] for timestep in timesteps},
+            step=None,
+        )

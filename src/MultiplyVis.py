@@ -11,6 +11,7 @@
 from src.GenerateView import GenerateView
 import os
 
+
 class MultiplyVis:
     """
     This is the wrapper/orchestrator class for the MULTIPLY visualisation
@@ -23,6 +24,7 @@ class MultiplyVis:
         """
         data_directory = os.path.abspath('../data/')
 
-        app = GenerateView(data_directory)
+        # Create the view that we want
+        view = GenerateView(data_directory)
 
-        app.run_server(debug=True)
+        view.run()

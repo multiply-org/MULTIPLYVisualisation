@@ -7,29 +7,197 @@
 # Original author: Bethan
 #
 #######################################################
+import xarray as xr
+import glob
+import yaml
+import os
+import numpy as np
+import datetime as dt
+import re
+import gdal
+import random
 
 
 class DataHandling:
     """This class pre-processes the data requested by the user. It transforms the data
     and keeps a copy of the values and the uncertainties in memory.
     """
-    def __examine filenames():
+
+    def __init__(self, directory):
+        """
+        Set this directory to be the source
+        :param directory:
+        """
+        # Save the directory
+        self.data_directory = directory
+
+        # Ingest transform data from config
+        with open(os.path.join(os.path.dirname(__file__),"transform_config.yaml"), 'r') as t_config:
+            self.transform_parameters = yaml.safe_load(t_config)
+
+    def __examine_filenames(self):
         pass
 
-    def __extract_available_parameters():
+    def __extract_available_parameters(self):
         pass
 
-    def extract_filenames():
+    def load_data(self, parameter):
+        """
+        Open up all the geotiffs, transform the data and save the core vlues and uncertainty into an xarray
+        :param parameter:
+        :return: xarray
+        """
+
+        # Save the parameter name as an attribute
+        self.parameter = parameter
+
+        # Gather all the filenames for this parameter into a list
+        self.__extract_filenames()
+
+        # Read the data recursively for these files
+        self.__create_dataset()
+
+        # Transform the values
+        self.__transform_data()
+
+        return self.data
+
+    def __extract_filenames(self):
+        """
+        Get the filenames of the
+        :return:
+        """
+        # Define empty filenames
+        self.filenames = {}
+
+        # Populate the core filenames list
+        self.filenames['core'] = sorted(glob.glob(f'{self.data_directory}/{self.parameter}_A???????.tif'))
+
+        # Poplate the uncertainty filenames list
+        self.filenames['unc'] = sorted(glob.glob(f'{self.data_directory}/{self.parameter}_A???????_unc.tif'))
+
+        # Todo: return sensible error here when filenames are empty
+
+    def get_timeseries(self):
         pass
 
-    def get_timeseries():
+    def get_timestep(self):
         pass
 
-    def get_timestep():
-        pass
+    def __create_dataset(self):
+        """
+        Create an xarray dataset of the data required
+        :return:
+        """
 
-    def __read_data():
-        pass
+        # Extract the datestrings from the core filenames:
+        datestrings = [(re.findall('\d+', fname))[0] for fname in self.filenames['core']]
 
-    def __transform_data():
-        pass
+        # Set flag to be false so that a new xarray is created the first time around
+        first_timestep_complete = False
+
+        # Loop over datestrings, do this instead of siply looping over filenames, so that we make sure uncertainty
+        # and core are in sync
+        for datestring in datestrings:
+
+            # Define filenames:
+            fname_core = [f for f in self.filenames['core'] if datestring in f][0]
+            fname_unc = [f for f in self.filenames['unc'] if datestring in f][0]
+
+            # Read the data into an xarray
+            core_data = self.__read_the_data(fname_core)
+
+            # Read uncertainty values into an xarray
+            unc_data = self.__read_the_data(fname_unc)
+
+            # Calculate min and max values
+            min_data = core_data - unc_data
+            max_data = core_data + unc_data
+
+            # Add min, core(mean) and max values into a dataset for this timestep
+            data_timsetep = xr.Dataset({'mean':core_data, 'min':min_data, 'max':max_data})
+
+            # rename dimensions
+            data_timsetep = data_timsetep.rename({'band': 'time', 'x': 'longitude', 'y': 'latitude'})
+
+            # Extract the date from the filename and create time coordinate
+            date = dt.datetime.strptime(datestring, "%Y%j")
+            data_timsetep.time.values = [date]
+
+            # Either create the self.data dataset, or concatenate.
+            if not first_timestep_complete:
+
+                self.data = data_timsetep
+                first_timestep_complete = True
+
+            # For runs >1, concatenate to the existing output variable
+            else:
+                self.data = xr.concat([self.data, data_timsetep], dim='time')
+
+    @staticmethod
+    def __read_the_data(fname):
+        """
+        Open the geotiff and read data into an xarray
+
+        :return:
+        """
+
+        # Generate a temporary filename
+        tmp_file = f'tmp_{random.randint(1,100)}.vrt'
+
+        # convert to lat/lon
+        gd = gdal.Warp(
+            srcDSOrSrcDSTab=fname,
+            destNameOrDestDS=tmp_file,
+            format='VRT',
+            dstSRS='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') #remove this to use native coordinates
+        gd = None  # flush the file
+
+        # open the data set
+        dataarray = xr.open_rasterio(tmp_file)
+
+        # Delete the temporary file
+        os.remove(tmp_file)
+
+        return dataarray
+
+    def __transform_data(self):
+        """
+        Use transform coefficients to convert data into real values
+
+        :return:
+        """
+        # Identify the type of transform that we're doing
+        if self.transform_parameters[self.parameter]['t_type'] == 'simple':
+            transform_func = self.__simple_transform
+        elif self.transform_parameters[self.parameter]['t_type'] == 'exponential':
+            transform_func = self.__exponential_transform
+        elif self.transform_parameters[self.parameter]['t_type'] == 'none':
+            transform_func = lambda x, y: x # just return the data and don't do anything with the coefficents
+        else:
+            raise IOError(f"unrecognised transform type for {self.parameter} in transform_config.yaml")
+
+        # extract coefficients
+        coeff = self.transform_parameters[self.parameter]['t_coeff']
+
+        # Transform all the values (core, minimum and maximum)
+        for param in ['max', 'mean', 'min']:
+            self.data[param].values = transform_func(self.data[param].values, coeff)
+
+    @staticmethod
+    def __exponential_transform(data, coeff):
+        """
+        Transform data using the (inverse) exponential form of the equations.
+        :param coeff:
+        :return:
+        """
+        return coeff * np.log(data)
+
+    @staticmethod
+    def __simple_transform(data, coeff):
+        """
+        Transform data using the simple form of the equations
+        :param coeff:
+        :return:
+        """
+        return coeff * data

@@ -1,0 +1,35 @@
+cab:
+  t_type: 'exponential'
+  t_coeff: -100
+
+car:
+  t_type: 'exponential'
+  t_coeff: -100
+
+cbrown:
+  t_type: 'none'
+  t_coeff: None
+
+cw:
+  t_type: 'exponential'
+  t_coeff: -1/50
+
+cdm:
+  t_type: 'exponential'
+  t_coeff: -1/100
+
+lai:
+  t_type: 'exponential'
+  t_coeff: -1
+
+ala:
+  t_type: 'simple'
+  t_coeff: 90
+
+bsoil:
+  t_type: 'none'
+  t_coeff: None
+
+psoil:
+  t_type: 'none'
+  t_coeff: None

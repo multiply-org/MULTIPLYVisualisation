@@ -12,11 +12,11 @@ cbrown:
 
 cw:
   t_type: 'exponential'
-  t_coeff: -1/50
+  t_coeff: -0.02
 
 cdm:
   t_type: 'exponential'
-  t_coeff: -1/100
+  t_coeff: -0.01
 
 lai:
   t_type: 'exponential'
@@ -31,5 +31,13 @@ bsoil:
   t_coeff: None
 
 psoil:
+  t_type: 'none'
+  t_coeff: None
+
+cb:
+  t_type: 'none'
+  t_coeff: None
+
+n:
   t_type: 'none'
   t_coeff: None

@@ -11,20 +11,19 @@
 from src.GenerateView import GenerateView
 import os
 
+from src.app import app
 
-class MultiplyVis:
-    """
-    This is the wrapper/orchestrator class for the MULTIPLY visualisation
-    """
-    def __init__(self):
-        """
-        This should start up on initialisation.
+app.run_server(debug=True)
 
-        Could potentially give it a directory to work from in the future - depends on how the use cases work out.
-        """
-        data_directory = os.path.abspath('../data/')
-
-        # Create the view that we want
-        view = GenerateView(data_directory)
-
-        view.run()
+# class MultiplyVis:
+#     """
+#     This is the wrapper/orchestrator class for the MULTIPLY visualisation
+#     """
+#     def __init__(self):
+#         """
+#         This should start up on initialisation.
+#
+#         Could potentially give it a directory to work from in the future - depends on how the use cases work out.
+#         """
+#
+#

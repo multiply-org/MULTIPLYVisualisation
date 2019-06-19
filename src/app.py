@@ -10,6 +10,7 @@
 import os
 import numpy as np
 import datetime as dt
+import pandas as pd
 
 import dash
 
@@ -110,8 +111,46 @@ def create_map(df, unc=False):
 
     return {'data': [data], 'layout': layout}
 
-#def populate_maps(param):
+def create_timeseries_plot(df, param):
+    """
 
+    :param df:
+    :return:
+    """
+
+    time = [pd.to_datetime(t).strftime("%d-%m-%Y") for t in df.index.values]
+
+    mean_line = go.Scatter(
+        x=time,
+        y=df['mean'],
+        mode='lines+markers',
+        name='mean',
+        marker={'color': 'rgba(0,150,150)'},
+        error_y=dict(
+            type='data',
+            symmetric=False,
+            array=df['max']-df['mean'],
+            arrayminus=df['mean']-df['min']
+        )
+    )
+
+    maxmin_fill = go.Scatter(
+        x=time + time[::-1], # time forwards and then backwards
+        y=pd.concat([df['max'], df['min'][::-1]]),
+        fill='tozerox',
+        fillcolor='rgba(0,150,150, 0.5)',
+        line=dict(color='rgba(0,150,150, 0)'),
+        name='Range')
+
+
+
+    data = [mean_line, maxmin_fill]
+
+    layout = go.Layout(
+            xaxis={'title': "Timestep"},
+            yaxis={'title': param})
+
+    return {'data': data, 'layout': layout}
 
 
 
@@ -127,16 +166,6 @@ dh = DataHandling(data_directory)
 
 all_parameters = dh.get_available_parameters()
 
-# app.layout = html.Div(
-#     [
-#
-#     html.H1(children='Multiply Visulisation', style={'textAlign': 'center'}),
-#
-#     generate_dropdown(),
-#
-#     # notice no children as we will specify these later with the callback
-#     html.Div(id='output')
-#     ])
 
 # Setup page
 app.layout = html.Div([
@@ -158,17 +187,42 @@ app.layout = html.Div([
         style={'width': '40%', 'float':'left', 'display':'inline-block'},
         children=[dcc.Graph(id='unc-map'),]
         ),
-    html.Div(id='intermediary-1', style={'display': 'none'})
+    html.Div(
+        style={'width': '80%', 'float':'left', 'display':'inline-block'},
+        children=dcc.Graph(id='pixel_timeseries'))
 ])
 
+@app.callback(Output(component_id='pixel_timeseries', component_property='figure'),
+              [Input(component_id='core-map', component_property='clickData'),
+              Input(component_id='unc-map', component_property='clickData')],
+              [State(component_id='parameter_select', component_property='value')])
+def update_timeseries(location_info1, location_info2, parameter):
+    """
 
-# @app.callback(
-#     Output(component_id='intermediary-1', component_property='children'),
-#     [Input('select', 'n_clicks')],
-#     [State(component_id='parameter_select', component_property='value')])
-# def initialise_new_param(n_clicks, input_value):
-#
-#     return input_value
+    :param location_info:
+    :return:
+    """
+
+    # Isolate the input which has triggered this callback
+    trigger = dash.callback_context.triggered[0]
+
+    if trigger['value']:
+
+        # Update latitude and longitude from map click
+        latitude = trigger['value']['points'][0]['lat']
+        longitude = trigger['value']['points'][0]['lon']
+
+        # Extract the timeseries from the dataframe
+        dataframe = dh.get_timeseries(parameter, latitude, longitude)
+
+        # Create ht timeseries plot
+        timeseries_plot = create_timeseries_plot(dataframe, parameter)
+
+        return timeseries_plot
+
+    else:
+
+        return {}
 
 
 @app.callback(Output(component_id='slider-container', component_property='children'),
@@ -179,7 +233,7 @@ def initialise_slider(n_clicks, parameter):
     if n_clicks:
 
         # Build the slider
-        timesteps = dh.get_timeseries(parameter)
+        timesteps = dh.get_timesteps(parameter)
         slider = build_slider(timesteps)
 
         return slider

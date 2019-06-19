@@ -44,7 +44,10 @@ class GenerateView:
         self.app.run_server(debug=True)
 
     def add_parameter_to_maps(self):
+        """
 
+        :return:
+        """
 
         self.build_slider()
 
@@ -56,8 +59,8 @@ class GenerateView:
         :return:
         """
         # Todo: un-hard-code this once we've got the dropdown sorted.
-        parameter='lai'
-        self.data = self.dh.load_data(parameter)
+        #parameter='lai'
+        #self.data = self.dh.load_data(parameter)
 
 
 
@@ -93,3 +96,4 @@ class GenerateView:
             marks={timestep.astype('int64'): str(timestep)[:10] for timestep in timesteps},
             step=None,
         )
+

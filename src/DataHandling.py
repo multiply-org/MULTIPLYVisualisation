@@ -15,7 +15,6 @@ import numpy as np
 import datetime as dt
 import re
 import gdal
-import random
 import pandas as pd
 
 

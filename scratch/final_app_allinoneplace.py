@@ -160,7 +160,7 @@ server = app.server
 
 app.config['suppress_callback_exceptions']=True
 
-data_directory = os.path.abspath('../data/')
+#data_directory = os.path.abspath('../data/')
 
 dh = DataHandling(data_directory)
 

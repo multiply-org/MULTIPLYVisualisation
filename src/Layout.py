@@ -26,7 +26,7 @@ class Layout:
                                 'display':'inline-block',
                                 'margin-bottom':'40px',
                                 'height':'40px'},
-                            children=""),
+                            children=[dcc.Slider(id='time-slider')]),
                         html.Div(
                             style={
                                 'width': '40%',

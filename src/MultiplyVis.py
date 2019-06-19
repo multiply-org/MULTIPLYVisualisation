@@ -8,7 +8,7 @@
 #
 #######################################################
 import os
-import datetime as dt
+import pandas as pd
 
 import dash
 from dash.dependencies import Input, Output, State
@@ -51,7 +51,7 @@ class MultiplyVis:
         if n_clicks:
 
             # Build the slider
-            slider = app.plotter.build_slider(parameter)
+            slider = app.plotter.slider(parameter)
 
             return slider
 
@@ -90,36 +90,107 @@ class MultiplyVis:
 
             return {}
 
+    # @staticmethod
+    # @app.callback([Output(component_id='core-map', component_property='figure'),
+    #                Output(component_id='unc-map', component_property='figure')],
+    #               [Input('time-slider', 'value')],
+    #               [State('parameter_select', 'value')])
+    # def update_maps(timestamp, parameter):
+    #     """
+    #
+    #     :param timestamp:
+    #     :param parameter:
+    #     :return:
+    #     """
+    #
+    #     maps = app.plotter.update_maps(timestamp, parameter)
+    #
+    #     return maps
 
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
                    Output(component_id='unc-map', component_property='figure')],
-                  [Input('time-slider', 'value')],
-                  [State(component_id='parameter_select',
-                         component_property='value')])
-    def update_maps(timestamp, parameter):
+                  [Input('time-slider', 'value'),
+                   Input('pixel_timeseries', 'clickData')],
+                  [State('parameter_select', 'value')])
+    def update_maps(input_plot, input_slider, parameter):
         """
-
-        :param timestamp:
-        :param parameter:
+        Update the maps in response to click on the slider or the timeseries
+        :param input_plot:
+        :param input_slider:
         :return:
         """
 
-        maps = app.plotter.update_maps(timestamp, parameter)
+        trigger = dash.callback_context.triggered[0]
 
-        return maps
+        if trigger['value']:
 
-    @staticmethod
-    @app.callback(
-        Output('markdown', 'children'),
-        [Input('time-slider', 'value')])
-    def update_markup(selected_time):
-        """
-        Post the date of the marker to the markdown string to make sure we're seeing time updating
-        :param selected_time:
-        :return:
-        """
-        return dt.datetime.fromtimestamp(selected_time).strftime("%Y-%m-%d")
+            if isinstance(trigger['value'], int):
+
+                # Extract timestamp from slider
+                timestamp = trigger['value']
+
+            else:
+
+                # Extract timestamp from timeseries plot
+                timestamp = pd.Timestamp(trigger['value']['points'][0]['x'])
+
+
+            maps = app.plotter.update_maps(timestamp, parameter)
+
+            return maps
+
+        else:
+
+            return {}, {}
+
+
+
+
+    # @staticmethod
+    # @app.callback(Output('markdown', 'children'),
+    #               [Input('pixel_timeseries', 'clickData')])
+    # def update_time_of_maps(input_plot):
+    #
+    #     trigger = dash.callback_context.triggered[0]
+    #
+    #     if trigger['value']:
+    #
+    #         dateis = trigger['value']['points'][0]['x']
+    #
+    #         return dateis
+    #
+    #     else:
+    #         pass
+
+    # @staticmethod
+    # @app.callback(Output('markdown', 'children'),
+    #               [Input('time-slider', 'value')])
+    # def update_time_of_maps(input_plot):
+    #
+    #     trigger = dash.callback_context.triggered[0]
+    #
+    #     if trigger['value']:
+    #
+    #         dateis = trigger['value']['points'][0]['x']
+    #
+    #         return dateis
+    #
+    #     else:
+    #         pass
+
+
+    # @staticmethod
+    # @app.callback(
+    #     Output('markdown', 'children'),
+    #     [Input('time-slider', 'value')])
+    # def update_markup(selected_time):
+    #     """
+    #     Post the date of the marker to the markdown string to make sure we're seeing time updating
+    #     :param selected_time:
+    #     :return:
+    #     """
+    #     return pd.Timestamp(selected_time).to_pydatetime().strftime("%Y-%m-%d")
 
 
 if __name__ == "__main__":

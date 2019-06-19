@@ -165,7 +165,7 @@ class TestViewGenerator:
         """
 
         # Build the slider
-        self.gv.build_slider()
+        self.gv.slider()
 
         # Assert the id
         assert self.gv.slider.id == 'time-slider'

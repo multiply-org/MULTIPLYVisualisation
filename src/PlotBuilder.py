@@ -14,6 +14,10 @@ class Plots:
 
         self.dh = DataHandling(data_directory)
 
+
+        self.access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsI' \
+                            'mEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
+
     def generate_parameter_dropdown(self):
         """
         Build the 'select parameter' dropdown
@@ -30,7 +34,7 @@ class Plots:
 
         return dropdown
 
-    def build_slider(self, param):
+    def slider(self, param):
         """
         Create the slider which displays the timesteps of the data
         :return:
@@ -40,11 +44,11 @@ class Plots:
 
         slider = dcc.Slider(
             id='time-slider',
-            min=dt.datetime.timestamp(timesteps[0]),
-            max=dt.datetime.timestamp(timesteps[-1]),
-            value=dt.datetime.timestamp(timesteps[0]),
+            min=timesteps[0].value,
+            max=timesteps[-1].value,
+            value=timesteps[0].value,
             marks={
-                dt.datetime.timestamp(timestep): timestep.strftime("%Y-%m-%d")
+                timestep.value: timestep.strftime("%d-%m-%Y")
                 for timestep in timesteps},
             step=None,
         )
@@ -59,7 +63,7 @@ class Plots:
         :return:
         """
         # Convert timestamp to datetime
-        dtime = dt.datetime.fromtimestamp(timestamp)
+        dtime = pd.Timestamp(timestamp).to_pydatetime()
 
         # Extract this data
         df = self.dh.get_timestep(param, time=dtime)
@@ -115,7 +119,7 @@ class Plots:
             hovermode='closest',
             showlegend=False,
             mapbox=dict(
-                accesstoken='pk.eyJ1IjoiYmV0aGFucGVya2lucyIsImEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A',
+                accesstoken=self.access_token,
                 bearing=0,
                 center=dict(
                     lat=np.mean(df.index.get_level_values('latitude').values),

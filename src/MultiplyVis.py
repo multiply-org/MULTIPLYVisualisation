@@ -145,41 +145,6 @@ class MultiplyVis:
             return {}, {}
 
 
-
-
-    # @staticmethod
-    # @app.callback(Output('markdown', 'children'),
-    #               [Input('pixel_timeseries', 'clickData')])
-    # def update_time_of_maps(input_plot):
-    #
-    #     trigger = dash.callback_context.triggered[0]
-    #
-    #     if trigger['value']:
-    #
-    #         dateis = trigger['value']['points'][0]['x']
-    #
-    #         return dateis
-    #
-    #     else:
-    #         pass
-
-    # @staticmethod
-    # @app.callback(Output('markdown', 'children'),
-    #               [Input('time-slider', 'value')])
-    # def update_time_of_maps(input_plot):
-    #
-    #     trigger = dash.callback_context.triggered[0]
-    #
-    #     if trigger['value']:
-    #
-    #         dateis = trigger['value']['points'][0]['x']
-    #
-    #         return dateis
-    #
-    #     else:
-    #         pass
-
-
     # @staticmethod
     # @app.callback(
     #     Output('markdown', 'children'),

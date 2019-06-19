@@ -1,0 +1,58 @@
+<VRTDataset rasterXSize="235" rasterYSize="204">
+  <SRS>PROJCS["WGS 84 / UTM zone 30N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-3],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32630"]]</SRS>
+  <GeoTransform>  5.7645258454900002e+05,  1.0000000000000000e+01,  0.0000000000000000e+00,  4.3246961533530001e+06,  0.0000000000000000e+00, -1.0000000000000000e+01</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">ala_A2017156_unc.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="235" RasterYSize="204" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="235" ySize="204" />
+      <DstRect xOff="0" yOff="0" xSize="235" ySize="204" />
+    </SimpleSource>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="Float32" band="2">
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">ala_A2017161_unc.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="235" RasterYSize="204" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="235" ySize="204" />
+      <DstRect xOff="0" yOff="0" xSize="235" ySize="204" />
+    </SimpleSource>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="Float32" band="3">
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">ala_A2017166_unc.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="235" RasterYSize="204" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="235" ySize="204" />
+      <DstRect xOff="0" yOff="0" xSize="235" ySize="204" />
+    </SimpleSource>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="Float32" band="4">
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">ala_A2017171_unc.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="235" RasterYSize="204" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="235" ySize="204" />
+      <DstRect xOff="0" yOff="0" xSize="235" ySize="204" />
+    </SimpleSource>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="Float32" band="5">
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">ala_A2017176_unc.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="235" RasterYSize="204" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="235" ySize="204" />
+      <DstRect xOff="0" yOff="0" xSize="235" ySize="204" />
+    </SimpleSource>
+  </VRTRasterBand>
+  <VRTRasterBand dataType="Float32" band="6">
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">ala_A2017181_unc.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="235" RasterYSize="204" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="235" ySize="204" />
+      <DstRect xOff="0" yOff="0" xSize="235" ySize="204" />
+    </SimpleSource>
+  </VRTRasterBand>
+</VRTDataset>

@@ -185,3 +185,16 @@ class Plots:
             yaxis={'title': param})
 
         return {'data': data, 'layout': layout}
+
+    def create_csv_string(self, param, lat, lon):
+        """
+        Not technically a plot, but this is where this lives
+        :param df:
+        :return:
+        """
+
+        df = self.dh.get_timeseries(param, lat, lon)
+
+        csv_string = df.to_csv(encoding='utf-8')
+
+        return csv_string

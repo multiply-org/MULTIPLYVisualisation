@@ -314,7 +314,7 @@ class DataHandling:
             data['oldmin'] = data['min']
             data['min'] = data['max']
             data['max'] = data['oldmin']
-            data.drop('oldmin')
+            data = data.drop('oldmin')
 
         return data
 

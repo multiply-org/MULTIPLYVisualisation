@@ -44,7 +44,14 @@ class Layout:
                                 'width': '80%',
                                 'float':'left',
                                 'display':'inline-block'},
-                            children=dcc.Graph(id='pixel_timeseries'))
+                            children=dcc.Graph(id='pixel_timeseries')),
+                        html.A(
+                            'Download Data',
+                            id='download-link',
+                            download="rawdata.csv",
+                            href="",
+                            target="_blank"
+                        )
                     ])
 
         return page

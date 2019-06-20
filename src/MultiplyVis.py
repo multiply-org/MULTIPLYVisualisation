@@ -9,6 +9,7 @@
 #######################################################
 import os
 import pandas as pd
+import urllib.parse
 
 import dash
 from dash.dependencies import Input, Output, State
@@ -60,7 +61,8 @@ class MultiplyVis:
 
     @staticmethod
     @app.callback(
-        Output(component_id='pixel_timeseries', component_property='figure'),
+        [Output(component_id='pixel_timeseries', component_property='figure'),
+         Output('download-link', 'href')],
         [Input(component_id='core-map', component_property='clickData'),
          Input(component_id='unc-map', component_property='clickData')],
         [State(component_id='parameter_select', component_property='value')])
@@ -84,11 +86,18 @@ class MultiplyVis:
             timeseries_plot = app.plotter.create_timeseries(
                 parameter, latitude, longitude)
 
-            return timeseries_plot
+            # Get the csv string
+            csv_string_base = app.plotter.create_csv_string(parameter,
+                                                            latitude, longitude)
+            # Convert this into a csv-like html string
+            csv_string = "data:text/csv;charset=utf-8," + \
+                         urllib.parse.quote(csv_string_base)
+
+            return timeseries_plot, csv_string
 
         else:
 
-            return {}
+            return {}, None
 
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
@@ -174,6 +183,6 @@ class MultiplyVis:
 
 if __name__ == "__main__":
 
-    #MultiplyVis()
+    MultiplyVis()
 
-    MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))
+    #MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

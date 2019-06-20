@@ -82,36 +82,34 @@ class Plots:
         Build the map
         """
 
-        cmin = vis_stats['mean'] - 2 * vis_stats['std']
-        cmax = vis_stats['mean'] + 2 * vis_stats['std']
-
         if not unc:
-            data = df['mean'].values
-        else:
-            data = df['max'].values - df['min'].values
+            data = df['mean']
 
-        #
-        #
-        # if not unc:
-        #     data = df['mean'].values
-        #     v_elements = {
-        #         'cmin': float(df['mean'].mean() - 2 * df['mean'].std()),
-        #         'cmax': float(df['mean'].mean() + 2 * df['mean'].std()),
-        #         'colorscale': 'RdBu',
-        #     }
-        # else:
-        #     data = df['max'].values - df['min'].values
-        #     # todo: clean this up
-        #     v_elements = {
-        #         'cmin': 0,
-        #         'cmax': float(df['mean'].min() + 2 * df['mean'].std()),
-        #         'colorscale': 'Viridis',
-        #     }
+            if (vis_stats['mean'] - vis_stats['std'] < vis_stats['min'] or
+                    vis_stats['mean'] + vis_stats['std'] > vis_stats['min']):
+
+                # Set min and max for colourscales based on min and max
+                cmin = float(vis_stats['min'])
+                cmax = float(vis_stats['max'])
+
+            else:
+
+                # Set min and max colourscales based on mean and std
+                cmin = float(vis_stats['mean'] - 2 * vis_stats['std'])
+                cmax = float(vis_stats['mean'] + 2 * vis_stats['std'])
+
+        else:
+
+            data = (df['max'] - df['min']).abs()
+
+            cmin = 0.0
+            cmax = float(vis_stats['max'] - vis_stats['min'])
+
 
         data = go.Scattermapbox(
             lon=df.index.get_level_values('longitude').values,
             lat=df.index.get_level_values('latitude').values,
-            hovertext=df['mean'].values.astype(str),
+            hovertext=data.astype(str),
             hoverinfo='text',
             mode='markers',
             marker={

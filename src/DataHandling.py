@@ -249,19 +249,27 @@ class DataHandling:
         vis_stats = {'unc':{}, 'core':{}}
 
         # Calculate the uncertainty range, which is what is plotted
-        range = dataset['max'] - dataset['min']
+        range = np.fabs(dataset['max'] - dataset['min'])
 
-        # Extract max and min
-        vis_stats['unc']['max'] = range.max()
-        vis_stats['unc']['min'] = range.min()
-        vis_stats['unc']['mean'] = range.mean()
-        vis_stats['unc']['std'] = range.std()
+        # Extract max and min, skipping nans and Infs
+        vis_stats['unc']['max'] = range.\
+            where(np.isfinite(range), np.nan).max(skipna=True)
+        vis_stats['unc']['min'] = range.\
+            where(np.isfinite(range), np.nan).min(skipna=True)
+        vis_stats['unc']['mean'] = range.\
+            where(np.isfinite(range), np.nan).mean(skipna=True)
+        vis_stats['unc']['std'] = range.\
+            where(np.isfinite(range), np.nan).std(skipna=True)
 
-        # Extract max and min from core data
-        vis_stats['core']['max'] = dataset['mean'].max()
-        vis_stats['core']['min'] = dataset['mean'].min()
-        vis_stats['core']['mean'] = dataset['mean'].mean()
-        vis_stats['core']['std'] = dataset['mean'].std()
+        # Extract max and min from core data, skipping nans and Infs
+        vis_stats['core']['max'] = dataset['mean'].\
+            where(np.isfinite(dataset['mean']), np.nan).max(skipna=True)
+        vis_stats['core']['min'] = dataset['mean'].\
+            where(np.isfinite(dataset['mean']), np.nan).min(skipna=True)
+        vis_stats['core']['mean'] = dataset['mean'].\
+            where(np.isfinite(dataset['mean']), np.nan).mean(skipna=True)
+        vis_stats['core']['std'] = dataset['mean'].\
+            where(np.isfinite(dataset['mean']), np.nan).std(skipna=True)
 
         return vis_stats
 
@@ -299,6 +307,14 @@ class DataHandling:
         # Transform all the values (core, minimum and maximum)
         for var in ['max', 'mean', 'min']:
             data[var].values = transform_func(data[var].values, coeff)
+
+        # Swap round the min and the max values for the exponential method,
+        # as untransforming switches their magnitudes
+        if self.transform_parameters[parameter]['t_type'] == 'exponential':
+            data['oldmin'] = data['min']
+            data['min'] = data['max']
+            data['max'] = data['oldmin']
+            data.drop('oldmin')
 
         return data
 

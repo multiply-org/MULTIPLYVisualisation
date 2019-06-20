@@ -176,11 +176,18 @@ class DataHandling:
         # Extract all filenames (discaring the first, which is the name of this file)
         filelist = gdata.GetFileList()[1:]
 
+        # Extract the filename from each ful path
+        filenames = [f.split('/')[-1] for f in filelist]
+
         # Extract the numerical part of each name as a datestring
-        datestrings = [(re.findall('\d+', file))[0] for file in filelist]
+        datestrings = [(re.findall('\d+', file))[0] for file in filenames]
 
         # Convert these datestrings into datetimes
-        datetimes = [dt.datetime.strptime(ds, "%Y%j") for ds in datestrings]
+        try:
+            datetimes = [dt.datetime.strptime(ds, "%Y%j") for ds in datestrings]
+        except ValueError:
+            raise Exception (f'Unable to determine datetime for {param}')
+
 
         return datetimes
 

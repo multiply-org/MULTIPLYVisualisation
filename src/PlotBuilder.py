@@ -158,15 +158,17 @@ class Plots:
             )
         )
 
-        maxmin_fill = go.Scatter(
-            x=time + time[::-1],  # time forwards and then backwards
-            y=pd.concat([df['max'], df['min'][::-1]]),
-            fill='tozerox',
-            fillcolor='rgba(0,150,150, 0.5)',
-            line=dict(color='rgba(0,150,150, 0)'),
-            name='Range')
+        data = [mean_line]
 
-        data = [mean_line, maxmin_fill]
+        # maxmin_fill = go.Scatter(
+        #     x=time + time[::-1],  # time forwards and then backwards
+        #     y=pd.concat([df['max'], df['min'][::-1]]),
+        #     fill='tozerox',
+        #     fillcolor='rgba(0,150,150, 0.5)',
+        #     line=dict(color='rgba(0,150,150, 0)'),
+        #     name='Range')
+        #
+        # data = [mean_line, maxmin_fill]
 
         layout = go.Layout(
             xaxis={'title': "Timestep"},

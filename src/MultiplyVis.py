@@ -90,23 +90,6 @@ class MultiplyVis:
 
             return {}
 
-    # @staticmethod
-    # @app.callback([Output(component_id='core-map', component_property='figure'),
-    #                Output(component_id='unc-map', component_property='figure')],
-    #               [Input('time-slider', 'value')],
-    #               [State('parameter_select', 'value')])
-    # def update_maps(timestamp, parameter):
-    #     """
-    #
-    #     :param timestamp:
-    #     :param parameter:
-    #     :return:
-    #     """
-    #
-    #     maps = app.plotter.update_maps(timestamp, parameter)
-    #
-    #     return maps
-
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
                    Output(component_id='unc-map', component_property='figure')],
@@ -144,55 +127,53 @@ class MultiplyVis:
 
             return {}, {}
 
+    @staticmethod
+    @app.callback(
+        Output('time-slider', 'value'),
+        [Input('pixel_timeseries', 'clickData')])
+    def update_markup(selected_time):
+        """
+        Update the slider when changing time via the plot
+        :param selected_time:
+        :return:
+        """
 
+        trigger = dash.callback_context.triggered[0]
 
+        if trigger['value']:
 
-    # @staticmethod
-    # @app.callback(Output('markdown', 'children'),
-    #               [Input('pixel_timeseries', 'clickData')])
-    # def update_time_of_maps(input_plot):
-    #
-    #     trigger = dash.callback_context.triggered[0]
-    #
-    #     if trigger['value']:
-    #
-    #         dateis = trigger['value']['points'][0]['x']
-    #
-    #         return dateis
-    #
-    #     else:
-    #         pass
+            timestamp = pd.Timestamp(trigger['value']['points'][0]['x'])
 
-    # @staticmethod
-    # @app.callback(Output('markdown', 'children'),
-    #               [Input('time-slider', 'value')])
-    # def update_time_of_maps(input_plot):
-    #
-    #     trigger = dash.callback_context.triggered[0]
-    #
-    #     if trigger['value']:
-    #
-    #         dateis = trigger['value']['points'][0]['x']
-    #
-    #         return dateis
-    #
-    #     else:
-    #         pass
+            return timestamp.value
+        else:
+            pass
 
+    @staticmethod
+    @app.callback(
+        Output('markdown', 'children'),
+        [Input('time-slider', 'value')])
+    def update_markup(selected_time):
+        """
+        Post the date of the marker to the markdown string to make sure we're seeing time updating
+        :param selected_time:
+        :return:
+        """
 
-    # @staticmethod
-    # @app.callback(
-    #     Output('markdown', 'children'),
-    #     [Input('time-slider', 'value')])
-    # def update_markup(selected_time):
-    #     """
-    #     Post the date of the marker to the markdown string to make sure we're seeing time updating
-    #     :param selected_time:
-    #     :return:
-    #     """
-    #     return pd.Timestamp(selected_time).to_pydatetime().strftime("%Y-%m-%d")
+        trigger = dash.callback_context.triggered[0]
+
+        if trigger['value']:
+
+            date = pd.Timestamp(selected_time).to_pydatetime().strftime("%Y-%m-%d")
+
+            return f"Date: {date}"
+
+        else:
+
+            pass
 
 
 if __name__ == "__main__":
 
-    MultiplyVis()
+    #MultiplyVis()
+
+    MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

@@ -13,7 +13,7 @@ class Layout:
                         html.Div(
                             [dcc.Markdown(
                                 id='markdown',
-                                children="default text")]),
+                                children="Select a datatype")]),
                         plotter.generate_parameter_dropdown(),
                         html.Button(
                             id='select',

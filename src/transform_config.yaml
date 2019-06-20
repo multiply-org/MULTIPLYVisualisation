@@ -41,3 +41,7 @@ cb:
 n:
   t_type: 'none'
   t_coeff: None
+
+cm:
+  t_type: 'none'
+  t_coeff: None

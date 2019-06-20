@@ -68,33 +68,45 @@ class Plots:
         # Extract this data
         df = self.dh.get_timestep(param, time=dtime)
 
+        # Extract the visulaisation statistics
+        vis_stats = self.dh.get_vis_stats(param)
+
         # Build the maps
-        core_map = self.create_map(df)
-        unc_map = self.create_map(df, unc=True)
+        core_map = self.create_map(df, vis_stats['core'])
+        unc_map = self.create_map(df, vis_stats['unc'], unc=True)
 
         return core_map, unc_map
 
-
-    def create_map(self, df, unc=False):
+    def create_map(self, df, vis_stats, unc=False):
         """
         Build the map
         """
 
+        cmin = vis_stats['mean'] - 2 * vis_stats['std']
+        cmax = vis_stats['mean'] + 2 * vis_stats['std']
+
         if not unc:
             data = df['mean'].values
-            v_elements = {
-                'cmin': float(df['mean'].mean() - 2 * df['mean'].std()),
-                'cmax': float(df['mean'].mean() + 2 * df['mean'].std()),
-                'colorscale': 'RdBu',
-            }
         else:
             data = df['max'].values - df['min'].values
-            # todo: clean this up
-            v_elements = {
-                'cmin': 0,
-                'cmax': float(df['mean'].min() + 2 * df['mean'].std()),
-                'colorscale': 'Viridis',
-            }
+
+        #
+        #
+        # if not unc:
+        #     data = df['mean'].values
+        #     v_elements = {
+        #         'cmin': float(df['mean'].mean() - 2 * df['mean'].std()),
+        #         'cmax': float(df['mean'].mean() + 2 * df['mean'].std()),
+        #         'colorscale': 'RdBu',
+        #     }
+        # else:
+        #     data = df['max'].values - df['min'].values
+        #     # todo: clean this up
+        #     v_elements = {
+        #         'cmin': 0,
+        #         'cmax': float(df['mean'].min() + 2 * df['mean'].std()),
+        #         'colorscale': 'Viridis',
+        #     }
 
         data = go.Scattermapbox(
             lon=df.index.get_level_values('longitude').values,
@@ -106,9 +118,9 @@ class Plots:
                 'size': 10,
                 'color': data,
                 'symbol': 'circle',
-                'cmin': v_elements['cmin'],
-                'cmax': v_elements['cmax'],
-                'colorscale': v_elements['colorscale'],
+                'cmin': cmin,
+                'cmax': cmax,
+                #'colorscale': v_elements['colorscale'],
                 'showscale': True,
             }
         )

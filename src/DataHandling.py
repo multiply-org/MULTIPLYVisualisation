@@ -134,6 +134,10 @@ class DataHandling:
             # Add to dictionary of all datasets
             self.data[param] = data_transformed
 
+            # Compute key statistics for visulaisation
+            self.data[param].attrs['vis_stats'] = \
+                self.__add_vis_stats(self.data[param])
+
         return self.data
 
     def __build_dataset(self, param):
@@ -234,6 +238,44 @@ class DataHandling:
         df = timeseries.to_dataframe()
 
         return df
+
+    def __add_vis_stats(self, dataset):
+        """
+        Calculate some key statistics for defining colourscales in the final
+        plots
+        :return:
+        """
+        # Empty dict
+        vis_stats = {'unc':{}, 'core':{}}
+
+        # Calculate the uncertainty range, which is what is plotted
+        range = dataset['max'] - dataset['min']
+
+        # Extract max and min
+        vis_stats['unc']['max'] = range.max()
+        vis_stats['unc']['min'] = range.min()
+        vis_stats['unc']['mean'] = range.mean()
+        vis_stats['unc']['std'] = range.std()
+
+        # Extract max and min from core data
+        vis_stats['core']['max'] = dataset['mean'].max()
+        vis_stats['core']['min'] = dataset['mean'].min()
+        vis_stats['core']['mean'] = dataset['mean'].mean()
+        vis_stats['core']['std'] = dataset['mean'].std()
+
+        return vis_stats
+
+    def get_vis_stats(self, param):
+        """
+        Extract the statistics required to build consistent colourbars for
+        the maps over all timesteps
+        :param param:
+        :return:
+        """
+
+        vis_stats = self.data[param].attrs['vis_stats']
+
+        return vis_stats
 
     def __transform_data(self, parameter, data):
         """

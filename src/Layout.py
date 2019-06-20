@@ -45,6 +45,23 @@ class Layout:
 
                  html.Div(children=[
 
+                     html.Div(id='dropdown_container', children=[
+                         dcc.Markdown(
+                             id='markdown',
+                             children="Select Parameter:"),
+                         plotter.generate_parameter_dropdown()
+                     ]),
+                     html.Div(id='button_container', children=[
+                         html.Button(
+                             id='select',
+                             n_clicks=0,
+                             children='Select')
+                     ])
+                 ])
+                 ,
+
+                 html.Div(children=[
+
                     html.Div(id='data_container',children=[
                         dcc.Graph(id='core-map')
                         ])
@@ -56,27 +73,16 @@ class Layout:
                     ])
                     ,
 
-                 html.Div(children=[
 
-                    html.Div(id='dropdown_container',children=[
-                        dcc.Markdown(
-                            id='markdown',
-                            children="Select Parameter:"),
-                            plotter.generate_parameter_dropdown()
-                        ]),
-                    html.Div(id='button_container',children=[
-                        html.Button(
-                            id='select',
-                            n_clicks=0,
-                            children='Select')
-                        ])
+
+                 html.Div(id='slider_container', children=[
+                    dcc.Slider(id='time-slider')
+                    ]),
+
+                 html.Div(id='timeseries_container',children=
+                    [dcc.Graph(id='pixel_timeseries')
+
                     ])
-                    ,
-
-                    # html.Div(id='slider_container', children=[
-                    #     dcc.Slider(id='time-slider')
-                    #     ])
-
 
                  ])
 

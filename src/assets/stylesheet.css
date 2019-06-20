@@ -83,14 +83,14 @@ p {
 	margin-top: 0px;
 	margin-left: 50px;
 	float: left;
-	height: 687px;
+	height: 640px;
 	width: 640px;
 	border: 1px solid black;
 }
 #unc_container {
 	margin-left: 710px;
 	margin-top: 20px;
-	height: 687px;
+	height: 640px;
 	width: 640px;
 	border: 1px solid black;
 }
@@ -120,4 +120,11 @@ p {
 	padding-top: 37px;
 	width: 1265px;
 	height: 55px;
+}
+
+#timeseries_container {
+    padding-left: 63px;
+	padding-top: 5px;
+	width: 1268px;
+	height: 251px;
 }

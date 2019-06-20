@@ -85,7 +85,7 @@ class Plots:
             v_elements = {
                 'cmin': float(df['mean'].mean() - 2 * df['mean'].std()),
                 'cmax': float(df['mean'].mean() + 2 * df['mean'].std()),
-                'colorscale': 'RdBu',
+                'colorscale': 'Viridis',
             }
         else:
             data = df['max'].values - df['min'].values
@@ -93,7 +93,7 @@ class Plots:
             v_elements = {
                 'cmin': 0,
                 'cmax': float(df['mean'].min() + 2 * df['mean'].std()),
-                'colorscale': 'Viridis',
+                'colorscale': 'Hot',
             }
 
         data = go.Scattermapbox(
@@ -115,7 +115,9 @@ class Plots:
 
         layout = go.Layout(
             margin=dict(t=0, b=0, r=10, l=10),
-            autosize=True,
+            autosize=False,
+            height=640,
+            width=640,
             hovermode='closest',
             showlegend=False,
             mapbox=dict(
@@ -170,6 +172,16 @@ class Plots:
 
         layout = go.Layout(
             xaxis={'title': "Timestep"},
-            yaxis={'title': param})
+            yaxis={'title': param},
+            width=1265,
+            height=271,
+            autosize=False,
+            margin=go.layout.Margin(
+                l=80,
+                r=0,
+                b=80,
+                t=30,
+                pad=4)
+            )
 
         return {'data': data, 'layout': layout}

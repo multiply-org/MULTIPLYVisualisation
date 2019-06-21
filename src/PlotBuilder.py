@@ -129,9 +129,9 @@ class Plots:
 
         layout = go.Layout(
             margin=dict(t=0, b=0, r=10, l=10),
-            autosize=False,
-            height=640,
-            width=640,
+            autosize=True, #False,
+            #height=640,
+            #width=640,
             hovermode='closest',
             showlegend=False,
             paper_bgcolor='rgba(0,0,0,0)',
@@ -190,9 +190,9 @@ class Plots:
         layout = go.Layout(
             xaxis={'title': "Timestep"},
             yaxis={'title': param},
-            width=1265,
-            height=271,
-            autosize=False,
+            #width=1265,
+            #height=271,
+            autosize=True,#False,
             paper_bgcolor='rgba(0,0,0,0)',
             margin=go.layout.Margin(
                 l=80,

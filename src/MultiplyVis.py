@@ -20,8 +20,8 @@ from src.PlotBuilder import Plots
 from src.Layout import Layout
 
 
-# Instantiate the app on import
-app = dash.Dash(__name__)
+# Instantiate the app on import, pass external stylesheets from layout
+app = dash.Dash(__name__)# external_stylesheets=Layout.external_stylesheets)
 
 server = app.server
 app.config['suppress_callback_exceptions'] = True
@@ -106,9 +106,9 @@ class MultiplyVis:
                        'zeroline': False, 'showgrid':False},
                 yaxis={'ticks': '', 'showticklabels': False,
                        'zeroline': False, 'showgrid':False},
-                width=1265,
-                height=271,
-                autosize=False,
+                #width=1265,
+                #height=271,
+                autosize=True,#False,
                 margin=go.layout.Margin(
                     l=80,
                     r=0,
@@ -168,18 +168,18 @@ class MultiplyVis:
                            'mEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
 
             layout = go.Layout(
-            margin=dict(t=0, b=0, r=10, l=10),
-            autosize=False,
-            height=640,
-            width=640,
-            hovermode='closest',
-            showlegend=False,
-            paper_bgcolor='rgba(0,0,0,0)',
-            mapbox=dict(
-                accesstoken=access_token,
-                bearing=0,
-                pitch=0,
-                style='light'
+                margin=dict(t=0, b=0, r=0, l=0),
+                autosize=True,#False,
+                #height=640,
+                #width=40, #640,
+                hovermode='closest',
+                showlegend=False,
+                paper_bgcolor='rgba(0,0,0,0)',
+                mapbox=dict(
+                    accesstoken=access_token,
+                    bearing=0,
+                    pitch=0,
+                    style='light'
             )
         )
             return {'data': dummy_data,'layout': layout},\

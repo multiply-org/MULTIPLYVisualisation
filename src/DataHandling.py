@@ -348,7 +348,7 @@ class DataHandling:
         return coeff * data
    
     @staticmethod
-    def __simple_transform(unc, coeff):
+    def __simple_transform_uncertainty(unc, coeff):
         """
         Transform data for the simple form of the equations. This calculation is exact
         :param coeff:

@@ -122,24 +122,8 @@ class MultiplyVis:
                 y=np.arange(5)*np.nan
             )]
 
-            return {'data': dummy_data, 'layout': layout}
+            return {'data': dummy_data, 'layout': layout}, ""
 
-    # @staticmethod
-    # @app.callback([Output(component_id='core-map', component_property='figure'),
-    #                Output(component_id='unc-map', component_property='figure')],
-    #               [Input('time-slider', 'value')],
-    #               [State('parameter_select', 'value')])
-    # def update_maps(timestamp, parameter):
-    #     """
-    #
-    #     :param timestamp:
-    #     :param parameter:
-    #     :return:
-    #     """
-    #
-    #     maps = app.plotter.update_maps(timestamp, parameter)
-    #
-    #     return maps
 
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),

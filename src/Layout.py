@@ -42,7 +42,7 @@ class Layout:
 
                          html.Div(id='dropdown_container', children=[
                              dcc.Markdown(
-                                 id='markdown',
+                                 id='select_text',
                                  children="Select Parameter:"),
                              plotter.generate_parameter_dropdown()
                          ]),
@@ -81,14 +81,18 @@ class Layout:
 
 
 
+
+
                  html.Div(id='slider_container', children=[
                     dcc.Slider(id='time-slider')
                     ]),
 
+                 html.Div(dcc.Markdown(id='markdown', children="")),
+
                  html.Div(id='timeseries_container',children=
                     [dcc.Graph(id='pixel_timeseries')
 
-                    ])
+                    ]),
                  html.A(
                      'Download Data',
                      id='download-link',

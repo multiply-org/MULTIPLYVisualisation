@@ -328,6 +328,17 @@ class DataHandling:
         return coeff * np.log(data)
 
     @staticmethod
+    def __exponential_transform_uncertainty(unc, data, coeff):
+        """
+        Transform uncertainty for the (inverse) exponential form of the equations using the first order 
+        taylor expansion approximation (uncertainty propagation). This will produce symmetric uncertanties.
+        In reality they are not symmetric
+        :param coeff:
+        :return:
+        """
+        return np.absolute(coeff * unc / data)
+   
+    @staticmethod
     def __simple_transform(data, coeff):
         """
         Transform data using the simple form of the equations
@@ -335,3 +346,12 @@ class DataHandling:
         :return:
         """
         return coeff * data
+   
+    @staticmethod
+    def __simple_transform(unc, coeff):
+        """
+        Transform data for the simple form of the equations. This calculation is exact
+        :param coeff:
+        :return:
+        """
+        return np.absolute(coeff) * unc

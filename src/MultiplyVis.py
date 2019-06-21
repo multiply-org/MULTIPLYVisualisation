@@ -10,9 +10,11 @@
 import os
 import pandas as pd
 import urllib.parse
+import numpy as np
 
 import dash
 from dash.dependencies import Input, Output, State
+import plotly.graph_objs as go
 
 from src.PlotBuilder import Plots
 from src.Layout import Layout
@@ -20,6 +22,7 @@ from src.Layout import Layout
 
 # Instantiate the app on import
 app = dash.Dash(__name__)
+
 server = app.server
 app.config['suppress_callback_exceptions'] = True
 app.plotter = None # create a blank space for the plotter, once we have
@@ -37,6 +40,7 @@ class MultiplyVis:
         # Add the PlotBuilder class on to the 'app' object. It's not pretty, but
         # it works as a way of passing the directory/plotting methods to the
         # callbacks
+
         app.plotter = Plots(data_directory)
 
         app.layout = Layout.index(app.plotter)
@@ -45,7 +49,7 @@ class MultiplyVis:
 
     @staticmethod
     @app.callback(
-        Output(component_id='slider-container', component_property='children'),
+        Output(component_id='slider_container', component_property='children'),
         [Input('select', 'n_clicks')],
         [State(component_id='parameter_select', component_property='value')])
     def initialise_slider(n_clicks, parameter):
@@ -97,7 +101,45 @@ class MultiplyVis:
 
         else:
 
-            return {}, None
+            layout = go.Layout(
+                xaxis={'ticks': '', 'showticklabels': False,
+                       'zeroline': False, 'showgrid':False},
+                yaxis={'ticks': '', 'showticklabels': False,
+                       'zeroline': False, 'showgrid':False},
+                width=1265,
+                height=271,
+                autosize=False,
+                margin=go.layout.Margin(
+                    l=80,
+                    r=0,
+                    b=80,
+                    t=30,
+                    pad=4)
+            )
+
+            dummy_data = [go.Scatter(
+                x=np.arange(5),
+                y=np.arange(5)*np.nan
+            )]
+
+            return {'data': dummy_data, 'layout': layout}
+
+    # @staticmethod
+    # @app.callback([Output(component_id='core-map', component_property='figure'),
+    #                Output(component_id='unc-map', component_property='figure')],
+    #               [Input('time-slider', 'value')],
+    #               [State('parameter_select', 'value')])
+    # def update_maps(timestamp, parameter):
+    #     """
+    #
+    #     :param timestamp:
+    #     :param parameter:
+    #     :return:
+    #     """
+    #
+    #     maps = app.plotter.update_maps(timestamp, parameter)
+    #
+    #     return maps
 
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
@@ -134,7 +176,30 @@ class MultiplyVis:
 
         else:
 
-            return {}, {}
+            dummy_data = [go.Scattermapbox(
+            lon=[],
+            lat=[])]
+
+            access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsI' \
+                           'mEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
+
+            layout = go.Layout(
+            margin=dict(t=0, b=0, r=10, l=10),
+            autosize=False,
+            height=640,
+            width=640,
+            hovermode='closest',
+            showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
+            mapbox=dict(
+                accesstoken=access_token,
+                bearing=0,
+                pitch=0,
+                style='light'
+            )
+        )
+            return {'data': dummy_data,'layout': layout},\
+                   {'data': dummy_data,'layout': layout}
 
     @staticmethod
     @app.callback(

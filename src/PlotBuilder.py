@@ -98,12 +98,16 @@ class Plots:
                 cmin = float(vis_stats['mean'] - 2 * vis_stats['std'])
                 cmax = float(vis_stats['mean'] + 2 * vis_stats['std'])
 
+            colorscale ='Viridis'
+
         else:
 
             data = (df['max'] - df['min']).abs()
 
             cmin = 0.0
             cmax = float(vis_stats['max'] - vis_stats['min'])
+
+            colorscale = 'Hot'
 
 
         data = go.Scattermapbox(
@@ -118,16 +122,19 @@ class Plots:
                 'symbol': 'circle',
                 'cmin': cmin,
                 'cmax': cmax,
-                #'colorscale': v_elements['colorscale'],
+                'colorscale': colorscale,
                 'showscale': True,
             }
         )
 
         layout = go.Layout(
             margin=dict(t=0, b=0, r=10, l=10),
-            autosize=True,
+            autosize=False,
+            height=640,
+            width=640,
             hovermode='closest',
             showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
             mapbox=dict(
                 accesstoken=self.access_token,
                 bearing=0,
@@ -182,7 +189,18 @@ class Plots:
 
         layout = go.Layout(
             xaxis={'title': "Timestep"},
-            yaxis={'title': param})
+            yaxis={'title': param},
+            width=1265,
+            height=271,
+            autosize=False,
+            paper_bgcolor='rgba(0,0,0,0)',
+            margin=go.layout.Margin(
+                l=80,
+                r=0,
+                b=80,
+                t=30,
+                pad=4)
+            )
 
         return {'data': data, 'layout': layout}
 

@@ -78,8 +78,6 @@ class Layout:
                         html.Div(id='data_container',children=[
                             dcc.Graph(id='core-map')
                             ]),
-
-                        html.P('', id='core-text')
                     ])
                     ,
                     html.Div(id='unc_vis_container', className='map_container',
@@ -91,13 +89,17 @@ class Layout:
                             dcc.Graph(id='unc-map')
                             ]),
 
-                        html.P('The above map displays uncertainty, '
-                               'calucluated with the [] method.',
-                               id='unc-text')
+
                     ]),
                     html.Div(style={'clear': 'left'})
-                    ])
-                    ,
+                    ]),
+
+                 html.P(id="helptext", className='middle_container',
+                        children='The Uncertainty map displays negative '
+                        'uncertainty only. The timeseries plot '
+                        'below displays both positive and negative '
+                        'values. Where the uncertainty is infinity, this is '
+                        'represented on the timeseries as the value zero.'),
 
                  html.Div(id="slider_time_container", className='middle_container',
                           children=[
@@ -127,7 +129,7 @@ class Layout:
                 ])
 
 
-                 ])
+             ])
                  ,
              html.Div(id='partners_container', children=[
                 html.Div(id='p1_container', className="logo_container", children=[

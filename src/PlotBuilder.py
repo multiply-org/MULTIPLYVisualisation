@@ -102,10 +102,10 @@ class Plots:
 
         else:
 
-            data = (df['max'] - df['min']).abs()
+            data = (df['mean'] - df['min']).abs()
 
             cmin = 0.0
-            cmax = float(vis_stats['max'] - vis_stats['min'])
+            cmax = float(vis_stats['max'])
 
             colorscale = 'Hot'
 

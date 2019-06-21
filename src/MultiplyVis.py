@@ -11,6 +11,7 @@ import os
 import pandas as pd
 import urllib.parse
 import numpy as np
+import datetime as dt
 
 import dash
 from dash.dependencies import Input, Output, State
@@ -128,10 +129,9 @@ class MultiplyVis:
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
                    Output(component_id='unc-map', component_property='figure')],
-                  [Input('time-slider', 'value'),
-                   Input('pixel_timeseries', 'clickData')],
+                  [Input('time-slider', 'value')],
                   [State('parameter_select', 'value')])
-    def update_maps(input_plot, input_slider, parameter):
+    def update_maps(input_slider, parameter):
         """
         Update the maps in response to click on the slider or the timeseries
         :param input_plot:
@@ -151,7 +151,8 @@ class MultiplyVis:
             else:
 
                 # Extract timestamp from timeseries plot
-                timestamp = pd.Timestamp(trigger['value']['points'][0]['x'])
+                timestamp = pd.Timestamp(
+                    trigger['value']['points'][0]['x'])
 
 
             maps = app.plotter.update_maps(timestamp, parameter)
@@ -199,8 +200,8 @@ class MultiplyVis:
         trigger = dash.callback_context.triggered[0]
 
         if trigger['value']:
-
-            timestamp = pd.Timestamp(trigger['value']['points'][0]['x'])
+            timestamp = pd.Timestamp(dt.datetime.strptime(
+                trigger['value']['points'][0]['x'],"%d-%m-%Y"))
 
             return timestamp.value
         else:
@@ -221,7 +222,8 @@ class MultiplyVis:
 
         if trigger['value']:
 
-            date = pd.Timestamp(selected_time).to_pydatetime().strftime("%Y-%m-%d")
+            date = pd.Timestamp(selected_time).to_pydatetime().strftime(
+                "%d-%m-%Y")
 
             return f"Date: {date}"
 
@@ -232,6 +234,6 @@ class MultiplyVis:
 
 if __name__ == "__main__":
 
-    MultiplyVis()
+    #MultiplyVis()
 
-    #MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))
+    MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

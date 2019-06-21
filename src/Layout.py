@@ -18,14 +18,14 @@ class Layout:
                  ]),
 
                  html.Div(id='main_title_container', children=[
-                     html.P('MULTIPLY Visualisations',
+                     html.P('MULTIPLY Visualisations', #change to H1
                             id='main_title')
                  ]),
 
-                 html.Div(id='descriptor_container',children=[
-                     html.P('Some filler text',
-                            id='descriptor')
-                 ])
+                 # html.Div(id='descriptor_container',children=[
+                 #     html.P('Some filler text',
+                 #            id='descriptor')
+                 # ])
 
                 ])
              ,
@@ -52,7 +52,6 @@ class Layout:
                                  n_clicks=0,
                                  children='Select')
                             ])
-
                      ])
                      ,
                      html.Div(id='unc_expl_container', children=[
@@ -68,14 +67,27 @@ class Layout:
 
                  html.Div(children=[
 
-                    html.Div(id='data_container',children=[
-                        dcc.Graph(id='core-map')
-                        ])
-                     ,
-                    html.Div(id='unc_container', children=[
-                        dcc.Graph(id='unc-map')
-                        ])
+                    html.Div(id='core_vis_container',children=[
 
+                        html.H2('Derived data', id='core_data_title'),
+
+                        html.Div(id='data_container',children=[
+                            dcc.Graph(id='core-map')
+                            ]),
+
+                        html.P('core text', id='core-text')
+                    ])
+                    ,
+                    html.Div(id='unc_vis_container',children=[
+
+                        html.H2('Uncertainty', id='unc_data_title'),
+
+                        html.Div(id='unc_container', children=[
+                            dcc.Graph(id='unc-map')
+                            ]),
+
+                        html.P('unc text', id='unc-text')
+                    ])
                     ])
                     ,
 
@@ -93,13 +105,18 @@ class Layout:
                     [dcc.Graph(id='pixel_timeseries')
 
                     ]),
-                 html.A(
-                     'Download Data',
-                     id='download-link',
-                     download="rawdata.csv",
-                     href="",
-                     target="_blank"
-                 )
+                 html.Button(
+                     id='download_button',
+                     n_clicks=0,
+                     children=[html.A(
+                         'Download Data',
+                         id='download-link',
+                         download="rawdata.csv",
+                         href="",
+                         target="_blank")
+                     ]),
+
+
 
                  ])
                  ,

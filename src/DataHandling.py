@@ -331,8 +331,9 @@ class DataHandling:
     def __exponential_transform_uncertainty(unc, data, coeff):
         """
         Transform uncertainty for the (inverse) exponential form of the equations using the first order 
-        taylor expansion approximation (uncertainty propagation). This will produce symmetric uncertanties.
-        In reality they are not symmetric
+        Taylor expansion approximation (uncertainty propagation). This approximation is only valid when 
+        the uncertainty is much smaller than the data. This will produce symmetric uncertanties.
+        In reality they are not symmetric especially when the uncertaitny is not much smaller than the data.
         :param coeff:
         :return:
         """

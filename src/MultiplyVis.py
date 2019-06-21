@@ -181,6 +181,7 @@ class MultiplyVis:
             width=640,
             hovermode='closest',
             showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
             mapbox=dict(
                 accesstoken=access_token,
                 bearing=0,

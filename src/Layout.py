@@ -13,7 +13,8 @@ class Layout:
              html.Div(children=[
 
                  html.Div(id='topleft_logo', children=[
-                     html.Img(src='assets/logo.png'),
+                     html.A([html.Img(src='assets/logo.png')],
+                            href='http://www.multiply-h2020.eu/')
                  ]),
 
                  html.Div(id='main_title_container', children=[
@@ -35,30 +36,35 @@ class Layout:
                     html.P('Data Display:', id='subtitle')
                     ])
                     ,
-                 html.Div(id='unc_expl_container', children=[
-                    html.P('Some description.', id='unc_expl')
-                    ])
-                    ,
+
+                 html.Div(children=[
+                     html.Div(id='select_box',children=[
+
+                         html.Div(id='dropdown_container', children=[
+                             dcc.Markdown(
+                                 id='markdown',
+                                 children="Select Parameter:"),
+                             plotter.generate_parameter_dropdown()
+                         ]),
+                         html.Div(id='button_container', children=[
+                             html.Button(
+                                 id='select',
+                                 n_clicks=0,
+                                 children='Select')
+                            ])
+
+                     ])
+                     ,
+                     html.Div(id='unc_expl_container', children=[
+                         html.P('Some description.', id='unc_expl')
+                     ])
+
+                 ])
+                 ,
                  html.Div(style={'clear': 'left'})
 
                     ,
 
-                 html.Div(children=[
-
-                     html.Div(id='dropdown_container', children=[
-                         dcc.Markdown(
-                             id='markdown',
-                             children="Select Parameter:"),
-                         plotter.generate_parameter_dropdown()
-                     ]),
-                     html.Div(id='button_container', children=[
-                         html.Button(
-                             id='select',
-                             n_clicks=0,
-                             children='Select')
-                     ])
-                 ])
-                 ,
 
                  html.Div(children=[
 
@@ -85,6 +91,24 @@ class Layout:
                     ])
 
                  ])
+                 ,
+             html.Div(id='partners_container', children=[
+                html.Div(id='p1_container', children=[
+                    html.A([html.Img(id='p1', src='assets/l1.png')
+                    ], href='https://ec.europa.eu/')]),
+
+                html.Div(id='p2_container',children=[
+                    html.A([html.Img(id='p2', src='assets/l2.png')],
+                           href='http://www.assimila.eu/')
+                    ,
+                    html.P('© 2019 Assimila Ltd',id='copyright')
+                    ]),
+
+                html.Div(id='p3_container', children=[
+                    html.A([html.Img(id='p3',src='assets/l3.png')],
+                           href='http://www.multiply-h2020.eu/')
+                    ])
+                ])
 
 
                 #      html.Div(

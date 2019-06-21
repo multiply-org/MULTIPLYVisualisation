@@ -120,6 +120,7 @@ class Plots:
             width=640,
             hovermode='closest',
             showlegend=False,
+            paper_bgcolor='rgba(0,0,0,0)',
             mapbox=dict(
                 accesstoken=self.access_token,
                 bearing=0,
@@ -176,6 +177,7 @@ class Plots:
             width=1265,
             height=271,
             autosize=False,
+            paper_bgcolor='rgba(0,0,0,0)',
             margin=go.layout.Margin(
                 l=80,
                 r=0,

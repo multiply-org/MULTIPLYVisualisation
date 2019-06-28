@@ -118,6 +118,7 @@ class Layout:
                         ]),
                      html.Button(
                          id='download_button',
+                         style={},
                          n_clicks=0,
                          children=[html.A(
                              'Download Data',

@@ -68,7 +68,8 @@ class MultiplyVis:
     @staticmethod
     @app.callback(
         [Output(component_id='pixel_timeseries', component_property='figure'),
-         Output('download-link', 'href')],
+         Output('download_link', 'href'),
+         Output('download_button', 'style')],
         [Input(component_id='core-map', component_property='clickData'),
          Input(component_id='unc-map', component_property='clickData')],
         [State(component_id='parameter_select', component_property='value')])
@@ -99,7 +100,7 @@ class MultiplyVis:
             csv_string = "data:text/csv;charset=utf-8," + \
                          urllib.parse.quote(csv_string_base)
 
-            return timeseries_plot, csv_string
+            return timeseries_plot, csv_string, {'display':'block'}
 
         else:
 
@@ -124,7 +125,7 @@ class MultiplyVis:
                 y=np.arange(5)*np.nan
             )]
 
-            return {'data': dummy_data, 'layout': layout}, ""
+            return {'data': dummy_data, 'layout': layout}, "", {'display':'none'}
 
 
     @staticmethod

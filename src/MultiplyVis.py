@@ -33,7 +33,8 @@ class MultiplyVis:
     """
     This is the wrapper/orchestrator class for the MULTIPLY visualisation
     """
-    def __init__(self, data_directory=os.path.abspath('../data/')):
+    def __init__(self, data_directory=os.path.abspath(os.path.join(
+        os.path.dirname(__file__),'../data/'))):
         """
         This should start up on initialisation.
 
@@ -46,7 +47,7 @@ class MultiplyVis:
 
         app.layout = Layout.index(app.plotter)
 
-        app.run_server(debug=True)
+        app.run_server()#debug=True)
 
     @staticmethod
     @app.callback(

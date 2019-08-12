@@ -233,7 +233,29 @@ class DataHandling:
         :param lon:
         :return:
         """
-        timeseries = self.data[param].sel(latitude=lat, longitude=lon)
+        timesteps_np64 = self.data[param].time.values
+        timeseries = self.data[param].sel(latitude=lat, longitude=lon,
+                                          method='nearest')
+
+
+        df = timeseries.to_dataframe()
+
+        return df
+
+    def get_stats(self,param,lats,lons):
+
+        time=self.get_timesteps(param)
+
+
+        lat_start=lats[0]
+        lat_end=lats[-1]
+
+        lon_start = lons[0]
+        lon_end = lons[-1]
+
+        timeseries=self.data[param].sel(latitude=slice(lat_start, lat_end),
+                             longitude=slice(lon_start, lon_end))
+        timeseries=timeseries.drop(['longitude','latitude'])
 
         df = timeseries.to_dataframe()
 
@@ -251,7 +273,8 @@ class DataHandling:
         # Calculate the uncertainty range, which is what is plotted
         range = np.fabs(dataset['max'] - dataset['min'])
 
-        # Extract max and min, skipping nans and Infs
+        # Extract max and min,
+        # ping nans and Infs
         vis_stats['unc']['max'] = range.\
             where(np.isfinite(range), np.nan).max(skipna=True)
         vis_stats['unc']['min'] = range.\

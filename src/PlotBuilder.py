@@ -4,9 +4,10 @@ import pandas as pd
 
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.graph_objs as go
+import plotly.graph_objects as go
 
 from src.DataHandling import DataHandling
+
 
 class Plots:
 
@@ -14,11 +15,10 @@ class Plots:
 
         self.dh = DataHandling(data_directory)
 
-
         self.access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsI' \
                             'mEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
 
-    def generate_parameter_dropdown(self):
+    def generate_parameter_dropdown(self, name):
         """
         Build the 'select parameter' dropdown
         :return:
@@ -26,11 +26,11 @@ class Plots:
 
         params = self.dh.get_available_parameters()
 
-        dropdown  = html.Div(
+        dropdown = html.Div(
             dcc.Dropdown(
-                id='parameter_select',
+                id=name,
                 options=[{'label': i, 'value': i} for i in params],),
-            style={'width':'100px', 'display': 'inline-block'})
+            style={'width': '100px', 'display': 'inline-block'})
 
         return dropdown
 
@@ -39,8 +39,9 @@ class Plots:
         Create the slider which displays the timesteps of the data
         :return:
         """
-
         timesteps = self.dh.get_timesteps(param)
+
+        div_value = len(timesteps)//4
 
         slider = dcc.Slider(
             id='time-slider',
@@ -49,16 +50,19 @@ class Plots:
             value=timesteps[0].value,
             marks={
                 timestep.value: timestep.strftime("%d-%m-%Y")
-                for timestep in timesteps},
-            step=None,
+                for timestep in timesteps
+                if timesteps.index(timestep) % div_value == 0
+            },
+            step=timesteps[1].value-timesteps[0].value,
+            dots=True
         )
 
         return slider
 
-    def update_maps(self, timestamp, param):
+    def update_maps(self, timestamp, param, maxmin):
         """
-        Use the timestep and the parameter to update hte maps
-        :param timestep:
+        Use the timestamp and the parameter to update hte maps
+        :param timestamp:
         :param param:
         :return:
         """
@@ -72,16 +76,24 @@ class Plots:
         vis_stats = self.dh.get_vis_stats(param)
 
         # Build the maps
-        core_map = self.create_map(df, vis_stats['core'])
-        unc_map = self.create_map(df, vis_stats['unc'], unc=True)
+        core_map = self.create_map(df, vis_stats['core'], maxmin)
+        unc_map = self.create_map(df, vis_stats['unc'], maxmin, unc=True)
 
         return core_map, unc_map
 
-    def create_map(self, df, vis_stats, unc=False):
-        """
-        Build the map
-        """
+    def update_unc_map(self, timestamp, param, maxmin):
 
+        dtime = pd.Timestamp(timestamp).to_pydatetime()
+
+        df = self.dh.get_timestep(param, time=dtime)
+
+        vis_stats = self.dh.get_vis_stats(param)
+
+        unc_map = self.create_map(df, vis_stats['core'], maxmin)
+
+        return unc_map
+
+    def get_data_and_colorscale(self, df, vis_stats, unc=False):
         if not unc:
             data = df['mean']
 
@@ -98,8 +110,7 @@ class Plots:
                 cmin = float(vis_stats['mean'] - 2 * vis_stats['std'])
                 cmax = float(vis_stats['mean'] + 2 * vis_stats['std'])
 
-            colorscale ='Viridis'
-
+            colorscale = 'Viridis'
         else:
 
             data = (df['mean'] - df['min']).abs()
@@ -108,74 +119,212 @@ class Plots:
             cmax = float(vis_stats['max'])
 
             colorscale = 'Hot'
+        return colorscale, data, cmin, cmax
 
+    def create_map(self, df, vis_stats, maxmin, unc=False):
+        """
+        Build the map
+        """
+        if maxmin is None:
+            if not unc:
 
-        data = go.Scattermapbox(
-            lon=df.index.get_level_values('longitude').values,
-            lat=df.index.get_level_values('latitude').values,
-            hovertext=data.astype(str),
-            hoverinfo='text',
-            mode='markers',
-            marker={
-                'size': 10,
-                'color': data,
-                'symbol': 'circle',
-                'cmin': cmin,
-                'cmax': cmax,
-                'colorscale': colorscale,
-                'showscale': True,
-            }
-        )
+                params = self.get_data_and_colorscale(df, vis_stats)
+                colorscale = params[0]
+                data = params[1]
+                cmin = params[2]
+                cmax = params[3]
+            else:
 
-        layout = go.Layout(
-            margin=dict(t=0, b=0, r=10, l=10),
-            autosize=True, #False,
-            #height=640,
-            #width=640,
-            hovermode='closest',
-            showlegend=False,
-            paper_bgcolor='rgba(0,0,0,0)',
-            mapbox=dict(
-                accesstoken=self.access_token,
-                bearing=0,
-                center=dict(
-                    lat=np.mean(df.index.get_level_values('latitude').values),
-                    lon=np.mean(df.index.get_level_values('longitude').values)
-                ),
-                pitch=0,
-                zoom=13,
-                style='light'
+                params = self.get_data_and_colorscale(df, vis_stats, unc=True)
+                colorscale = params[0]
+                data = params[1]
+                cmin = params[2]
+                cmax = params[3]
+
+        elif maxmin is not None:
+            cmin1 = maxmin[0]
+            cmax1 = maxmin[1]
+            cmin2 = maxmin[2]
+            cmax2 = maxmin[3]
+
+            if not unc:
+                if cmin1 != 0.0 and cmax1 != 0.0:
+
+                    data = df['mean']
+                    cmin = cmin1
+                    cmax = cmax1
+                    colorscale = 'Viridis'
+
+                elif cmin1 != 0:
+
+                    params = self.get_data_and_colorscale(df, vis_stats)
+                    colorscale = params[0]
+                    data = params[1]
+                    cmin = cmin1
+                    cmax = params[3]
+
+                elif cmax1 != 0:
+
+                    params = self.get_data_and_colorscale(df, vis_stats)
+                    colorscale = params[0]
+                    data = params[1]
+                    cmin = params[2]
+                    cmax = cmax1
+
+                else:
+
+                    params = self.get_data_and_colorscale(df, vis_stats,
+                                                          unc=False)
+                    colorscale = params[0]
+                    data = params[1]
+                    cmin = params[2]
+                    cmax = params[3]
+
+            else:
+                if cmin2 != 0 and cmax2 != 0:
+                    data = (df['mean'] - df['min']).abs()
+
+                    cmin = cmin2
+                    cmax = cmax2
+
+                elif cmin2 != 0.0:
+                    data = (df['mean'] - df['min']).abs()
+
+                    cmin = cmin2
+                    cmax = float(vis_stats['max'])
+
+                elif cmax2 != 0.0:
+                    data = (df['mean'] - df['min']).abs()
+
+                    cmin = 0.0
+                    cmax = cmax2
+
+                else:
+                    data = (df['mean'] - df['min']).abs()
+
+                    cmin = 0.0
+                    cmax = float(vis_stats['max'])
+
+                colorscale = 'Hot'
+
+        if data is not None:
+            data = go.Scattermapbox(
+                lon=df.index.get_level_values('longitude').values,
+                lat=df.index.get_level_values('latitude').values,
+                hovertext=data.astype(str),
+                hoverinfo='text',
+                mode='markers',
+                marker={
+                    'size': 10,
+                    'color': data,
+                    'symbol': 'circle',
+                    'cmin': cmin,
+                    'cmax': cmax,
+                    'colorscale': colorscale,
+                    'showscale': True,
+                }
             )
-        )
 
+            layout = go.Layout(
+                margin=dict(t=0, b=0, r=10, l=10),
+                height=350,
+                width=620,
+                autosize=False,
+                # hovermode='closest',
+                # showlegend=False,
+                paper_bgcolor='rgba(0,0,0,0)',
+                mapbox=dict(
+                     accesstoken=self.access_token,
+                     bearing=0,
+                     center=dict(
+                         lat=np.mean(
+                             df.index.get_level_values('latitude').values),
+                         lon=np.mean(
+                             df.index.get_level_values('longitude').values)
+                     ),
+                     pitch=0,
+                     zoom=13,
+                     style='light'
+                ),
+                uirevision='yes'
+            )
         return {'data': [data], 'layout': layout}
 
-    def create_timeseries(self, param, lat, lon):
+    def create_timeseries(self, param, lat, lon, area_data, area=False):
         """
-
-        :param df:
+        :param param:
+        :param lat:
+        :param lon:
         :return:
         """
 
-        df = self.dh.get_timeseries(param, lat, lon)
+        vis_stats = self.dh.get_vis_stats(param)
 
-        time = [pd.to_datetime(t).strftime("%d-%m-%Y") for t in df.index.values]
+        if lat and lon:
 
-        mean_line = go.Scatter(
-            x=time,
-            y=df['mean'],
-            mode='lines+markers',
-            name='mean',
-            marker={'color': 'rgba(0,150,150)'},
-            error_y=dict(
-                type='data',
-                symmetric=False,
-                array=df['max'] - df['mean'],
-                arrayminus=df['mean'] - df['min']
+            df = self.dh.get_timeseries(param, lat, lon)
+
+            time = [pd.to_datetime(t).strftime("%d-%m-%Y") for t in df.index.values]
+
+            mean_line = go.Scatter(
+                x=time,
+                y=df['mean'],
+                mode='lines+markers',
+                name='mean',
+                marker={'color': 'rgba(0,150,150)'},
+                error_y=dict(
+                    type='data',
+                    symmetric=False,
+                    array=df['max'] - df['mean'],
+                    arrayminus=df['mean'] - df['min']
+                )
             )
-        )
+            data = [mean_line]
 
-        data = [mean_line]
+        elif area:
+            df = self.dh.get_timesteps(param)
+
+            time = [pd.to_datetime(t).strftime("%d-%m-%Y") for t in
+                    df]
+
+            mean_line = go.Scatter(
+                x=time,
+                y=area_data[0],
+                mode='lines+markers',
+                name='mean',
+                marker={'color': 'rgba(0,150,150)'},
+                error_y=dict(
+                    type='data',
+                    symmetric=False,
+                    array=np.array(area_data[2].where(np.isfinite(area_data[2]),
+                                               np.nan) -
+                        area_data[0].where(np.isfinite(area_data[0]), np.nan)),
+                    arrayminus=np.array(np.array(area_data[0],dtype=float) -
+                        area_data[1].where(np.isfinite(area_data[1]), np.nan))
+                )
+            )
+            std_line = go.Scatter(
+                x=time,
+                y=np.array(area_data[0].where(np.isfinite(area_data[0]), np.nan) -
+                  vis_stats['core']['std'].item()),
+                mode='lines+markers',
+                name='standard deviation',
+                marker={'color': 'red',
+                        'size':3.5},
+                error_y=None,
+            )
+            std_line2 = go.Scatter(
+                x=time,
+                y=np.array(area_data[0].where(np.isfinite(area_data[0]), np.nan)
+                           + vis_stats['core']['std'].item()),
+                mode='lines+markers',
+                name='standard deviation',
+                marker={ 'size' : 3.5,
+                         'color':'green'},
+                error_y=None
+            )
+            data = [mean_line, std_line, std_line2]
+
 
         # maxmin_fill = go.Scatter(
         #     x=time + time[::-1],  # time forwards and then backwards
@@ -190,28 +339,39 @@ class Plots:
         layout = go.Layout(
             xaxis={'title': "Timestep"},
             yaxis={'title': param},
-            #width=1265,
-            #height=271,
-            autosize=True,#False,
+            width=1500,
+            height=277,
+            autosize=True,  # False,
             paper_bgcolor='rgba(0,0,0,0)',
             margin=go.layout.Margin(
-                l=80,
+                l=40,
                 r=0,
-                b=80,
-                t=30,
+                b=40,
+                t=15,
                 pad=4)
             )
 
         return {'data': data, 'layout': layout}
 
+    def get_data(self, param, lats, lons):
+
+        df = self.dh.get_stats(param, lats, lons)
+        timesteps=self.dh.get_timesteps(param)
+
+        return df,timesteps
+
     def create_csv_string(self, param, lat, lon):
         """
-        Not technically a plot, but this is where this lives
-        :param df:
+        :param param:
+        :param lat:
+        :param lon:
         :return:
         """
 
         df = self.dh.get_timeseries(param, lat, lon)
+        div_value= len(df)//8
+
+        df = df.iloc[:div_value]
 
         csv_string = df.to_csv(encoding='utf-8')
 

@@ -31,6 +31,13 @@ class Plots:
                 id=name,
                 options=[{'label': i, 'value': i} for i in params],),
             style={'width': '100px', 'display': 'inline-block'})
+        if name == 'parameter_select2':
+            dropdown = html.Div(
+                dcc.Dropdown(
+                    id=name,
+                    options=[{'label': i, 'value': i} for i in params],
+                disabled=True),
+                style={'width': '100px', 'display': 'inline-block'})
 
         return dropdown
 

@@ -521,7 +521,8 @@ class MultiplyVis:
     @staticmethod
     @app.callback(
         [Output('dropdown_container2', 'style'),
-         Output('select2', 'style')],
+         Output('select2', 'style'),
+         Output('parameter_select2','disabled')],
         [Input('visibility_button', 'n_clicks')],
         [State('dropdown_container2', 'style'),
          State('select2', 'style')])
@@ -541,17 +542,18 @@ class MultiplyVis:
                 dropdown_state['visibility'] = 'visible'
 
                 select_state['visibility'] = 'visible'
-                return dropdown_state, select_state
+
+                return dropdown_state, select_state,False
 
             elif vis == 'visible' or vis == 'visible':
 
                 dropdown_state['visibility'] = 'hidden'
 
                 select_state['visibility'] = 'hidden'
-                return dropdown_state, select_state
+                return dropdown_state, select_state,True
 
         else:
-            return dropdown_state, select_state
+            return dropdown_state, select_state,True
 
     @staticmethod
     @app.callback(
@@ -601,6 +603,6 @@ class MultiplyVis:
 
 if __name__ == "__main__":
 
-    # MultiplyVis()
+    MultiplyVis()
 
-    MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))
+    #MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

@@ -2,32 +2,32 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-import plotly.plotly as py
+import plotly
 import plotly.graph_objs as go
 
 
 app = dash.Dash()
 
-trace1 = dcc.Scatter(
+trace1 = go.Scatter(
     x=[1, 2, 3],
     y=[2, 3, 4],
     name="trace 1",
 )
-trace2 = dcc.Scatter(
+trace2 = go.Scatter(
     x=[20, 30, 40],
     y=[5, 5, 5],
     name="trace 2",
     xaxis='x7',
     yaxis='y'
  )
-trace3 = dcc.Scatter(
+trace3 = go.Scatter(
     x=[2, 3, 4],
     y=[600, 700, 800],
     name="trace 3",
     xaxis='x',
     yaxis='y2'
 )
-trace4 = dcc.Scatter(
+trace4 = go.Scatter(
     x=[4000, 5000, 6000],
     y=[7000, 8000, 9000],
     name="trace 4",

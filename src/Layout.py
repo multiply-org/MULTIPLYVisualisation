@@ -115,7 +115,11 @@ class Layout:
                                                'values. ''Where the uncertainty'
                                                ' is infinity, this is '
                                                'represented on the timeseries'
-                                               ' as the value zero.'),
+                                               ' as the value zero.'
+                                               'If you input 0 to the '
+                                               'colourscale inputs it will '
+                                               'reset them to their original '
+                                               'value.'),
                                        ]),
                               html.Button(
                                   id='download_button',

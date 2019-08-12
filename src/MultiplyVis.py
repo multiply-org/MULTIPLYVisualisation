@@ -156,6 +156,27 @@ class MultiplyVis:
 
                 if parameter2 is not None:
                     return_vals = app.plotter.get_data(parameter2, lats, lons)
+                    df = return_vals[0]
+
+                    means = df.where(np.isfinite(df['mean']), np.nan).mean(
+                        level=2, skipna=True)['mean']
+                    mins = df.where(np.isfinite(df['min']), np.nan).mean(
+                        level=2, skipna=True)['min']
+                    maxs = df.where(np.isfinite(df['max']), np.nan).mean(
+                        level=2, skipna=True)['max']
+
+                    area_data = [means, mins, maxs]
+                    timeseries_plot = app.plotter.create_timeseries(parameter2,
+                                                                    0, 0,
+                                                                    area_data,
+                                                                    area=True)
+
+                    csv_string_base = app.plotter.create_csv_string(parameter2,
+                                                                    lats[0],
+                                                                    lons[0])
+                    csv_string = "data:text/csv;charset=utf-8," + \
+                                 urllib.parse.quote(csv_string_base)
+                    return timeseries_plot, csv_string, {'display': 'block'}
                 elif parameter2 is None:
                     return_vals = app.plotter.get_data(parameter, lats, lons)
             else:

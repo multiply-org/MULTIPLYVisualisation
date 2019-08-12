@@ -233,7 +233,7 @@ class DataHandling:
         :param lon:
         :return:
         """
-        timesteps_np64 = self.data[param].time.values
+
         timeseries = self.data[param].sel(latitude=lat, longitude=lon,
                                           method='nearest')
 
@@ -243,9 +243,6 @@ class DataHandling:
         return df
 
     def get_stats(self,param,lats,lons):
-
-        time=self.get_timesteps(param)
-
 
         lat_start=lats[0]
         lat_end=lats[-1]

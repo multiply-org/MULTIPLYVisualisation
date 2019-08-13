@@ -146,8 +146,8 @@ class MultiplyVis:
 
                 lats = [unc_selected_data['range']['mapbox'][0][1],
                         unc_selected_data['range']['mapbox'][1][1]]
-                if unc_selected_data['range']['mapbox'][0][
-                    0]>unc_selected_data['range']['mapbox'][1][0]:
+                if unc_selected_data['range']['mapbox'][0][0]\
+                        > unc_selected_data['range']['mapbox'][1][0]:
                     lons = [unc_selected_data['range']['mapbox'][1][0],
                             unc_selected_data['range']['mapbox'][0][0]]
                 else:
@@ -303,8 +303,7 @@ class MultiplyVis:
         # Program does not take into account the max min if the colorscale
         # buttton is not clicked so maxmin is set to none if it is not used
 
-        access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsI' \
-                       'mEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
+        access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2ZnMwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'
 
         if parameter is None:
             # gives dummy data if it is not given any parameter
@@ -431,7 +430,9 @@ class MultiplyVis:
             # parameter
             if parameter2 is not None and maxmin is None:
                 # updates maps if parameter 2 is selected and maxmin is none
+
                 if isinstance(input_slider, int):
+
                     unc_map = app.plotter.update_unc_map(
                         time_slider, parameter2, maxmin)
                     core_map = app.plotter.update_unc_map(
@@ -446,6 +447,7 @@ class MultiplyVis:
                     return maps[0], maps[1], cmax, cmin, unc_cmax, unc_cmin
                 else:
                     # Extract timestamp from timeseries plot
+
                     timestamp = pd.Timestamp(
                         input_slider['value']['points'][0]['x'])
                     maps = app.plotter.update_maps(timestamp, parameter,
@@ -457,6 +459,7 @@ class MultiplyVis:
 
                     return maps[0], maps[1], cmax, cmin, unc_cmax, unc_cmin
             elif parameter2 is not None and maxmin is not None:
+
                 unc_maxmin = [float(unc_cmin), float(unc_cmax), 0, 0]
                 unc_map = app.plotter.update_unc_map(
                     time_slider, parameter2, unc_maxmin)
@@ -482,6 +485,7 @@ class MultiplyVis:
 
         elif n_clicks2 and trigger['prop_id'] == 'colorscale_update.n_clicks':
             if parameter2 is None:
+
                 maps = app.plotter.update_maps(time_slider, parameter,
                                                maxmin)
                 cmax = maps[0]['data'][0]['marker'].cmax
@@ -492,11 +496,13 @@ class MultiplyVis:
                 return maps[0], maps[1], cmax, cmin, unc_cmax, unc_cmin
 
             elif parameter2 is not None and maxmin is not None:
+
                 unc_maxmin = [float(unc_cmin), float(unc_cmax), 0, 0]
                 unc_map = app.plotter.update_unc_map(
                     time_slider, parameter2, unc_maxmin)
                 core_map = app.plotter.update_unc_map(
                     time_slider, parameter, maxmin)
+
                 maps = core_map, unc_map
                 cmax = maps[0]['data'][0]['marker'].cmax
                 cmin = maps[0]['data'][0]['marker'].cmin
@@ -505,6 +511,7 @@ class MultiplyVis:
 
                 return maps[0], maps[1], cmax, cmin, unc_cmax, unc_cmin
             else:
+
                 maps = app.plotter.update_maps(time_slider, parameter,
                                                maxmin)
                 cmax = maps[0]['data'][0]['marker'].cmax
@@ -517,12 +524,11 @@ class MultiplyVis:
         else:
             pass
 
-
     @staticmethod
     @app.callback(
         [Output('dropdown_container2', 'style'),
          Output('select2', 'style'),
-         Output('parameter_select2','disabled')],
+         Output('parameter_select2', 'disabled')],
         [Input('visibility_button', 'n_clicks')],
         [State('dropdown_container2', 'style'),
          State('select2', 'style')])
@@ -543,17 +549,17 @@ class MultiplyVis:
 
                 select_state['visibility'] = 'visible'
 
-                return dropdown_state, select_state,False
+                return dropdown_state, select_state, False
 
             elif vis == 'visible' or vis == 'visible':
 
                 dropdown_state['visibility'] = 'hidden'
 
                 select_state['visibility'] = 'hidden'
-                return dropdown_state, select_state,True
+                return dropdown_state, select_state, True
 
         else:
-            return dropdown_state, select_state,True
+            return dropdown_state, select_state, True
 
     @staticmethod
     @app.callback(
@@ -601,8 +607,9 @@ class MultiplyVis:
 
             pass
 
+
 if __name__ == "__main__":
 
-    MultiplyVis()
+    # MultiplyVis()
 
-    #MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))
+    MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

@@ -147,20 +147,18 @@ class Layout:
                                            value=0.0,
                                            style={'display': '',
                                                   'margin-top': '6.5%'}),
-
                                  html.H2('Derived data', id='core_data_title'),
-
                                  html.Div(id='data_container', children=[
                                      dcc.Graph(id='core-map',
-                                               config={'modeBarButtonsToRemove'
-                                                        :['lasso2d']}),
+                                            #config={'modeBarButtonsToRemove':
+                                             #              ['lasso2d']}
+                                               ),
                                      dcc.Input(id='cmin',
                                                className='input_box',
                                                value=0.0,
                                                style={'display': ''})
                                  ]),
                              ]),
-
                     html.Div(id='unc_vis_container', className='map_container',
                              children=[
                                  dcc.Input(id='unc_cmax',
@@ -172,8 +170,8 @@ class Layout:
                                  html.H2('Uncertainty', id='unc_data_title'),
                                  html.Div(id='unc_container', children=[
                                      dcc.Graph(id='unc-map',
-                                               config={'modeBarButtonsToRemove'
-                                                       :['lasso2d']}
+                                               config={'modeBarButtonsToRemove':
+                                                           ['lasso2d']}
                                                ),
                                      dcc.Input(id='unc_cmin',
                                                className='input_box',
@@ -182,8 +180,7 @@ class Layout:
                                                style={'display': ''})
                                  ]),
                              ]),
-                    html.Div(style={'clear': 'left'})
-                    ],
+                    html.Div(style={'clear': 'left'})],
                           style={'display': 'block'}),
 
                  html.Div(id="slider_time_container",
@@ -203,7 +200,6 @@ class Layout:
              ])
             ])
 
-
         return page
 
     @staticmethod
@@ -216,6 +212,7 @@ class Layout:
         #     "https://fonts.googleapis.com/css?family=Open+Sans&display=swap",
         # ]
 
-        stylesheets ="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+        stylesheets =\
+            "https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
 
         return stylesheets

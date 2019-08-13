@@ -15,8 +15,7 @@ class Plots:
 
         self.dh = DataHandling(data_directory)
 
-        self.access_token = 'pk.eyJ1IjoiYmV0aGFucGVya2lucyIsI' \
-                            'mEiOiJpZ1lWQXlzIn0.comSgcNvpNUaLuXE0EOc8A'
+        self.access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2ZnMwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'
 
     def generate_parameter_dropdown(self, name):
         """
@@ -149,34 +148,30 @@ class Plots:
                 cmax = params[3]
 
         elif maxmin is not None:
-            cmin1 = maxmin[0]
-            cmax1 = maxmin[1]
-            cmin2 = maxmin[2]
-            cmax2 = maxmin[3]
 
             if not unc:
-                if cmin1 != 0.0 and cmax1 != 0.0:
+                if maxmin[0] != 0.0 and maxmin[1] != 0.0:
 
                     data = df['mean']
-                    cmin = cmin1
-                    cmax = cmax1
+                    cmin = maxmin[0]
+                    cmax = maxmin[1]
                     colorscale = 'Viridis'
 
-                elif cmin1 != 0:
+                elif maxmin[0] != 0:
 
                     params = self.get_data_and_colorscale(df, vis_stats)
                     colorscale = params[0]
                     data = params[1]
-                    cmin = cmin1
+                    cmin = maxmin[0]
                     cmax = params[3]
 
-                elif cmax1 != 0:
+                elif maxmin[1] != 0:
 
                     params = self.get_data_and_colorscale(df, vis_stats)
                     colorscale = params[0]
                     data = params[1]
                     cmin = params[2]
-                    cmax = cmax1
+                    cmax = maxmin[1]
 
                 else:
 
@@ -188,23 +183,23 @@ class Plots:
                     cmax = params[3]
 
             else:
-                if cmin2 != 0 and cmax2 != 0:
+                if maxmin[2] != 0 and maxmin[3] != 0:
                     data = (df['mean'] - df['min']).abs()
 
-                    cmin = cmin2
-                    cmax = cmax2
+                    cmin = maxmin[2]
+                    cmax = maxmin[3]
 
-                elif cmin2 != 0.0:
+                elif maxmin[2] != 0.0:
                     data = (df['mean'] - df['min']).abs()
 
-                    cmin = cmin2
+                    cmin = maxmin[2]
                     cmax = float(vis_stats['max'])
 
-                elif cmax2 != 0.0:
+                elif maxmin[3] != 0.0:
                     data = (df['mean'] - df['min']).abs()
 
                     cmin = 0.0
-                    cmax = cmax2
+                    cmax = maxmin[3]
 
                 else:
                     data = (df['mean'] - df['min']).abs()
@@ -303,10 +298,10 @@ class Plots:
                 error_y=dict(
                     type='data',
                     symmetric=False,
-                    array=np.array(area_data[2].where(np.isfinite(area_data[2]),
-                                               np.nan) -
+                    array=np.array(area_data[2].where(
+                        np.isfinite(area_data[2]), np.nan) -
                         area_data[0].where(np.isfinite(area_data[0]), np.nan)),
-                    arrayminus=np.array(np.array(area_data[0],dtype=float) -
+                    arrayminus=np.array(np.array(area_data[0], dtype=float) -
                         area_data[1].where(np.isfinite(area_data[1]), np.nan))
                 )
             )
@@ -317,7 +312,7 @@ class Plots:
                 mode='lines+markers',
                 name='standard deviation',
                 marker={'color': 'red',
-                        'size':3.5},
+                        'size': 3.5},
                 error_y=None,
             )
             std_line2 = go.Scatter(
@@ -326,12 +321,11 @@ class Plots:
                            + vis_stats['core']['std'].item()),
                 mode='lines+markers',
                 name='standard deviation',
-                marker={ 'size' : 3.5,
-                         'color':'green'},
+                marker={'size': 3.5,
+                         'color': 'green'},
                 error_y=None
             )
             data = [mean_line, std_line, std_line2]
-
 
         # maxmin_fill = go.Scatter(
         #     x=time + time[::-1],  # time forwards and then backwards
@@ -363,7 +357,7 @@ class Plots:
     def get_data(self, param, lats, lons):
 
         df = self.dh.get_stats(param, lats, lons)
-        timesteps=self.dh.get_timesteps(param)
+        timesteps = self.dh.get_timesteps(param)
 
         return df,timesteps
 

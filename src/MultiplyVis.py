@@ -303,7 +303,8 @@ class MultiplyVis:
         # Program does not take into account the max min if the colorscale
         # buttton is not clicked so maxmin is set to none if it is not used
 
-        access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2ZnMwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'
+        access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2Zn' \
+                       'MwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'
 
         if parameter is None:
             # gives dummy data if it is not given any parameter
@@ -332,6 +333,8 @@ class MultiplyVis:
 
         if trigger['prop_id'] == 'core-map.relayoutData' and core_map is not \
                 None:
+            # Moves the maps together if the movement originated from the
+            # core map
             if 'mapbox.pitch' in core_relayout_data:
 
                 mapbox = dict(
@@ -352,6 +355,7 @@ class MultiplyVis:
 
         elif trigger['prop_id'] == 'unc-map.relayoutData' and unc_map is not \
                 None:
+            # moves maps together if the movement originated from the unc map
             if 'mapbox.pitch' in unc_relayout_data:
 
                 mapbox = dict(
@@ -371,6 +375,7 @@ class MultiplyVis:
                 return core_map, unc_map, cmax, cmin, unc_cmax, unc_cmin
 
         if trigger['prop_id'] != 'colorscale_update.n_clicks':
+            # handles the maxmin values
             maxmin = None
         else:
             try:
@@ -485,6 +490,9 @@ class MultiplyVis:
 
         elif n_clicks2 and trigger['prop_id'] == 'colorscale_update.n_clicks':
             if parameter2 is None:
+
+                # Deals with updating the graph if parameter2 is selected and
+                # maxmin is not none
 
                 maps = app.plotter.update_maps(time_slider, parameter,
                                                maxmin)
@@ -610,6 +618,6 @@ class MultiplyVis:
 
 if __name__ == "__main__":
 
-    # MultiplyVis()
+    MultiplyVis()
 
-    MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))
+    #MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

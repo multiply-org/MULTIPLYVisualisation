@@ -15,7 +15,8 @@ class Plots:
 
         self.dh = DataHandling(data_directory)
 
-        self.access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2ZnMwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'
+        self.access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2Z' \
+                            'nMwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'
 
     def generate_parameter_dropdown(self, name):
         """
@@ -130,6 +131,11 @@ class Plots:
     def create_map(self, df, vis_stats, maxmin, unc=False):
         """
         Build the map
+        :param df:
+        :param vis_stats:
+        :param maxmin:
+        :param unc:
+        :return:
         """
         if maxmin is None:
             if not unc:
@@ -254,9 +260,12 @@ class Plots:
 
     def create_timeseries(self, param, lat, lon, area_data, area=False):
         """
+
         :param param:
         :param lat:
         :param lon:
+        :param area_data:
+        :param area:
         :return:
         """
 
@@ -327,16 +336,6 @@ class Plots:
             )
             data = [mean_line, std_line, std_line2]
 
-        # maxmin_fill = go.Scatter(
-        #     x=time + time[::-1],  # time forwards and then backwards
-        #     y=pd.concat([df['max'], df['min'][::-1]]),
-        #     fill='tozerox',
-        #     fillcolor='rgba(0,150,150, 0.5)',
-        #     line=dict(color='rgba(0,150,150, 0)'),
-        #     name='Range')
-        #
-        # data = [mean_line, maxmin_fill]
-
         layout = go.Layout(
             xaxis={'title': "Timestep"},
             yaxis={'title': param},
@@ -355,6 +354,13 @@ class Plots:
         return {'data': data, 'layout': layout}
 
     def get_data(self, param, lats, lons):
+        """
+        It gets all the data for latitdues and lons from selected area
+        :param param:
+        :param lats:
+        :param lons:
+        :return:
+        """
 
         df = self.dh.get_stats(param, lats, lons)
         timesteps = self.dh.get_timesteps(param)

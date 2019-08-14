@@ -244,6 +244,15 @@ class DataHandling:
 
     def get_stats(self,param,lats,lons):
 
+        """
+        Gets the data for all the lats and lons in the range of the lats and
+        lons input from the selected area and returns the data
+        :param param:
+        :param lats:
+        :param lons:
+        :return:
+        """
+
         lat_start=lats[0]
         lat_end=lats[-1]
 

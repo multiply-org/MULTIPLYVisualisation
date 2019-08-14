@@ -150,8 +150,8 @@ class Layout:
                                  html.H2('Derived data', id='core_data_title'),
                                  html.Div(id='data_container', children=[
                                      dcc.Graph(id='core-map',
-                                            #config={'modeBarButtonsToRemove':
-                                             #              ['lasso2d']}
+                                            config={'modeBarButtonsToRemove':
+                                                          ['lasso2d']}
                                                ),
                                      dcc.Input(id='cmin',
                                                className='input_box',

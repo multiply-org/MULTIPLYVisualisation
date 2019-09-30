@@ -32,7 +32,8 @@ class DataHandling:
         self.data_directory = directory
 
         # Ingest transform data from config
-        with open(os.path.join(os.path.dirname(__file__),"transform_config.yaml"), 'r') as t_config:
+        with open(os.path.join(os.path.dirname(__file__),
+                               "transform_config.yaml"), 'r') as t_config:
             self.transform_parameters = yaml.safe_load(t_config)
 
         # Extract available parameters
@@ -161,7 +162,8 @@ class DataHandling:
         xarray_max = xarray_core + xarray_unc
 
         # Store as a DataSet
-        dataset = xr.Dataset({'min':xarray_min, 'mean':xarray_core, 'max':xarray_max})
+        dataset = xr.Dataset({'min': xarray_min, 'mean': xarray_core,
+                              'max': xarray_max})
 
         return dataset
 
@@ -191,7 +193,6 @@ class DataHandling:
             datetimes = [dt.datetime.strptime(ds, "%Y%j") for ds in datestrings]
         except ValueError:
             raise Exception (f'Unable to determine datetime for {param}')
-
 
         return datetimes
 
@@ -237,12 +238,11 @@ class DataHandling:
         timeseries = self.data[param].sel(latitude=lat, longitude=lon,
                                           method='nearest')
 
-
         df = timeseries.to_dataframe()
 
         return df
 
-    def get_stats(self,param,lats,lons):
+    def get_stats(self, param, lats, lons):
 
         """
         Gets the data for all the lats and lons in the range of the lats and
@@ -253,15 +253,15 @@ class DataHandling:
         :return:
         """
 
-        lat_start=lats[0]
-        lat_end=lats[-1]
+        lat_start = lats[0]
+        lat_end = lats[-1]
 
         lon_start = lons[0]
         lon_end = lons[-1]
 
-        timeseries=self.data[param].sel(latitude=slice(lat_start, lat_end),
-                             longitude=slice(lon_start, lon_end))
-        timeseries=timeseries.drop(['longitude','latitude'])
+        timeseries = self.data[param].sel(latitude=slice(lat_start, lat_end),
+                                          longitude=slice(lon_start, lon_end))
+        timeseries = timeseries.drop(['longitude', 'latitude'])
 
         df = timeseries.to_dataframe()
 
@@ -274,7 +274,7 @@ class DataHandling:
         :return:
         """
         # Empty dict
-        vis_stats = {'unc':{}, 'core':{}}
+        vis_stats = {'unc': {}, 'core': {}}
 
         # Calculate the uncertainty range, which is what is plotted
         range = np.fabs(dataset['max'] - dataset['min'])

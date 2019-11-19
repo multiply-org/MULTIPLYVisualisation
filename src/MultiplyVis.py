@@ -253,6 +253,17 @@ class MultiplyVis:
                    {'display': 'none'}
 
     @staticmethod
+    @app.callback([Output('unc_data_title', 'h2')],
+                  [Input(component_id='select2',
+                         component_property='n_clicks')],
+                  [State('unc_vis_container', 'unc_data_title')])
+    def change_titles(n_clicks,state):
+        if n_clicks:
+            return ['Second parameter']
+        else:
+            return ['Uncertainty']
+
+    @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
                    Output(component_id='unc-map', component_property='figure'),
                    Output('cmax', 'value'),

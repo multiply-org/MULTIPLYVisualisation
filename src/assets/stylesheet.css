@@ -21,7 +21,9 @@ p {
     margin-left:12%;
     max-height: 500px;
 }
-
+#header_container{
+    margin-bottom:6%;
+}
 
 
 #topleft_logo {

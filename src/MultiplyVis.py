@@ -48,7 +48,8 @@ class MultiplyVis:
 
         app.layout = Layout.index(app.plotter)
 
-        app.run_server()
+        app.run_server(debug=True, host='10.154.0.2')
+        #app.run_server()
 
     @staticmethod
     @app.callback(

@@ -1,3 +1,4 @@
+import sys
 from src.MultiplyVis import MultiplyVis
 
 """
@@ -26,4 +27,7 @@ if __name__ == "__main__":
 
     #MultiplyVis()
 
-    show()
+    if len(sys.argv) > 1 :
+        show(sys.argv[1])
+    else:
+        show()

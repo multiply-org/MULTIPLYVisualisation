@@ -26,14 +26,8 @@ class Layout:
                                     html.Div(id='p2_container',
                                              className="logo_container",
                                              children=[
-                                                 html.A([html.Img(
-                                                     id='p2',
-                                                     src='assets/l2.png')],
-                                                     href='http://www.assimila'
-                                                          '.eu/'),
-
-                                                 html.P('© 2019 Assimila Ltd',
-                                                        id='copyright')
+                                                 html.H2( 'MULTIPLY Visualisations',
+                                                     id='p2')
                                              ]),
 
                                     html.Div(id='p3_container',
@@ -45,20 +39,10 @@ class Layout:
                                                  href='http://www.multiply-'
                                                       'h2020.eu/')],
                                              ),
-                                    html.Div(id='main_title_container',
-                                             children=[
-                                                 html.H1(
-                                                     'MULTIPLY Visualisations',
-                                                     id='main_title')])
                                 ])
                       ]),
 
              html.Div(id='data_background', children=[
-
-                 # html.Div(id='subtitle_container',children=[
-                 #    html.P('Data Display:', id='subtitle')
-                 #    ])
-                 #    ,
                  html.Div(className='side_container',
                           id='sidebar',
                           children=[

@@ -14,6 +14,7 @@ import numpy as np
 import datetime as dt
 
 import dash
+import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
 
@@ -47,7 +48,7 @@ class MultiplyVis:
 
         app.layout = Layout.index(app.plotter)
 
-        app.run_server(debug=True, host='10.154.0.2')
+        app.run_server()
 
     @staticmethod
     @app.callback(
@@ -253,15 +254,24 @@ class MultiplyVis:
                    {'display': 'none'}
 
     @staticmethod
-    @app.callback([Output('unc_data_title', 'h2')],
+    @app.callback(Output('unc_data_title', 'children'),
                   [Input(component_id='select2',
-                         component_property='n_clicks')],
-                  [State('unc_vis_container', 'unc_data_title')])
-    def change_titles(n_clicks,state):
+                         component_property='n_clicks'),
+                   Input(component_id='select',
+                         component_property='n_clicks')
+                   ],
+                  [State('unc_data_title', 'children')])
+    def change_titles(n_clicks,n_clicks2, state):
+        trigger = dash.callback_context.triggered[0]
         if n_clicks:
-            return ['Second parameter']
+            if trigger['prop_id'] == 'select2.n_clicks':
+                return 'Second parameter'
+            elif trigger['prop_id'] == 'select.n_clicks':
+                return 'Uncertainty'
+            else:
+                return 'Uncertainty'
         else:
-            return ['Uncertainty']
+            return 'Uncertainty'
 
     @staticmethod
     @app.callback([Output(component_id='core-map', component_property='figure'),
@@ -631,4 +641,4 @@ if __name__ == "__main__":
 
     MultiplyVis()
 
-    #MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))
+    # MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

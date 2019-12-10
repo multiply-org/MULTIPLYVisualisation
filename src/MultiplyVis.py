@@ -35,7 +35,9 @@ class MultiplyVis:
     """
     This is the wrapper/orchestrator class for the MULTIPLY visualisation
     """
-    def __init__(self, data_directory=os.path.abspath(os.path.join(os.path.dirname(__file__), '../data/'))):
+    def __init__(self,
+            data_directory=os.path.abspath(os.path.join(os.path.dirname(__file__), '../data/')),
+            kaska=False):
         """
         This should start up on initialisation.
 
@@ -44,12 +46,12 @@ class MultiplyVis:
         # it works as a way of passing the directory/plotting methods to the
         # callbacks
 
-        app.plotter = Plots(data_directory)
+        app.plotter = Plots(data_directory, kaska)
 
         app.layout = Layout.index(app.plotter)
 
-        app.run_server(debug=True, host='10.154.0.2')
-        #app.run_server()
+        #app.run_server(debug=True, host='10.154.0.2')
+        app.run_server()
 
     @staticmethod
     @app.callback(

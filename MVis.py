@@ -12,11 +12,11 @@ To use a bespoke directory, type:
 
 """
 
-def show(directory=None):
+def show(directory=None, kaska=False):
 
     if directory:
 
-        MultiplyVis(directory)
+        MultiplyVis(directory, kaska)
 
     else:
 
@@ -28,6 +28,6 @@ if __name__ == "__main__":
     #MultiplyVis()
 
     if len(sys.argv) > 1 :
-        show(sys.argv[1])
+        show(sys.argv[1], sys.argv[2].lower()=='true')
     else:
         show()

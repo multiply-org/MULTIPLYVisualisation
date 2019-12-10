@@ -7,13 +7,16 @@ import dash_html_components as html
 import plotly.graph_objects as go
 
 from src.DataHandling import DataHandling
-
+from src.DataHandlingKaska import DataHandlingKaska
 
 class Plots:
 
-    def __init__(self, data_directory):
+    def __init__(self, data_directory, kaska=False):
 
-        self.dh = DataHandling(data_directory)
+        if kaska is True:
+            self.dh = DataHandlingKaska(data_directory)
+        else:
+            self.dh = DataHandling(data_directory)
 
         self.access_token = 'pk.eyJ1IjoiYWxleGNvcm5lbGl1cyIsImEiOiJjandhcXZ2Z' \
                             'nMwYnB0NDlzNnJyYXF2NGh5In0.dOemdsmJJfkte6eeoBrQbQ'

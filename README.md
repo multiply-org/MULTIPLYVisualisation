@@ -23,14 +23,17 @@
         
     * Locate the MULTIPLY output directory. The MULTIPLY Vis still uses KaFKA outputs, one file per time step!, e.g.:
       * A couple of months data:
-        * ```/home/user/MULTIPLYVisualisation/data```
+        * ```$HOME/MULTIPLYVisualisation/data```
       * About six months data:
-        * ```/home/user/MULTIPLYVisualisation/data_2```
+        * ```$HOME/MULTIPLYVisualisation/data_2/kafkaout_Barrax_Q1_noprior_S2```
+      * About six months of data in a single file (KaSKA)
+        * ```$HOME/Projects/MULTIPLYVisualisation/data_3```
     
     * Activate the conda environment
       * ```conda activate multiply_vis```
      
     * Start the server
-      * ```python MVis.py /home/lopez_saldana/MULTIPLYVisualisation/data_2```
+      * ```python MVis.py /home/lopez_saldana/MULTIPLYVisualisation/data_2 False```
+        * Note: Use True as last parameter if you want to visualise data in a single file
       * Open a browser and go to the VM external IP address, e.g. 35.230.135.32 and port 8050
         * http://35.230.135.32:8050

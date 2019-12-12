@@ -51,7 +51,12 @@ class Plots:
         """
         timesteps = self.dh.get_timesteps(param)
 
-        div_value = len(timesteps)//4
+        if len(timesteps) == 1:
+            div_value = 1
+            _step=0
+        else:
+            div_value = len(timesteps)//4
+            _step = timesteps[1].value-timesteps[0].value
 
         slider = dcc.Slider(
             id='time-slider',
@@ -63,7 +68,7 @@ class Plots:
                 for timestep in timesteps
                 if timesteps.index(timestep) % div_value == 0
             },
-            step=timesteps[1].value-timesteps[0].value,
+            step=_step,
             dots=True
         )
 

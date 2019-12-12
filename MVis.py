@@ -12,22 +12,24 @@ To use a bespoke directory, type:
 
 """
 
-def show(directory=None, kaska=False):
+def show(directory=None, kaska=False, port=None):
 
     if directory:
 
-        MultiplyVis(directory, kaska)
+        MultiplyVis(directory, kaska, port)
 
     else:
 
-        MultiplyVis()
+        MultiplyVis(kaska=kaska, port=port)
 
 
 if __name__ == "__main__":
 
     #MultiplyVis()
 
-    if len(sys.argv) > 1 :
-        show(sys.argv[1], sys.argv[2].lower()=='true')
+    if len(sys.argv) == 2 :
+        show(sys.argv[1], sys.argv[2].lower() == 'true')
+    elif len(sys.argv) == 3 :
+        show(sys.argv[1], sys.argv[2].lower()=='true', sys.argv[3])
     else:
         show()

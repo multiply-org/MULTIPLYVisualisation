@@ -17,10 +17,10 @@ import dash
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import plotly.graph_objects as go
+import socket
 
 from src.PlotBuilder import Plots
 from src.Layout import Layout
-
 
 # Instantiate the app on import, pass external stylesheets from layout
 app = dash.Dash(__name__)  # external_stylesheets=Layout.external_stylesheets)
@@ -28,6 +28,8 @@ app = dash.Dash(__name__)  # external_stylesheets=Layout.external_stylesheets)
 server = app.server
 app.config['suppress_callback_exceptions'] = True
 app.plotter = None  # create a blank space for the plotter, once we have
+
+
 # a directory to work with
 
 
@@ -35,9 +37,12 @@ class MultiplyVis:
     """
     This is the wrapper/orchestrator class for the MULTIPLY visualisation
     """
+
     def __init__(self,
-            data_directory=os.path.abspath(os.path.join(os.path.dirname(__file__), '../data/')),
-            kaska=False):
+                 data_directory=os.path.abspath(os.path.join(os.path.dirname(__file__), '../data/')),
+                 kaska=False,
+                 port=None
+                 ):
         """
         This should start up on initialisation.
 
@@ -50,8 +55,14 @@ class MultiplyVis:
 
         app.layout = Layout.index(app.plotter)
 
-        #app.run_server(debug=True, host='10.154.0.2')
-        app.run_server()
+        hostname = socket.gethostname()
+        host = socket.gethostbyname(hostname)
+        if port is None:
+            app.run_server(debug=True, host=host)
+        else:
+            app.run_server(debug=True, port=port)
+
+        # app.run_server()
 
     @staticmethod
     @app.callback(
@@ -120,7 +131,7 @@ class MultiplyVis:
                     dropdown_state['visibility'] == 'visible':
 
                 timeseries_plot = app.plotter.create_timeseries(
-                     parameter2, latitude, longitude, 0)
+                    parameter2, latitude, longitude, 0)
 
             # Get the csv string
             csv_string_base = app.plotter.create_csv_string(parameter,
@@ -150,7 +161,7 @@ class MultiplyVis:
 
                 lats = [unc_selected_data['range']['mapbox'][0][1],
                         unc_selected_data['range']['mapbox'][1][1]]
-                if unc_selected_data['range']['mapbox'][0][0]\
+                if unc_selected_data['range']['mapbox'][0][0] \
                         > unc_selected_data['range']['mapbox'][1][0]:
                     lons = [unc_selected_data['range']['mapbox'][1][0],
                             unc_selected_data['range']['mapbox'][0][0]]
@@ -202,13 +213,12 @@ class MultiplyVis:
 
                 dummy_data = [go.Scatter(
                     x=np.arange(5),
-                    y=np.arange(5)*np.nan
+                    y=np.arange(5) * np.nan
                 )]
 
                 return {'data': dummy_data, 'layout': layout}, "", \
                        {'display': 'none'}
                 pass
-
 
             df = return_vals[0]
 
@@ -250,7 +260,7 @@ class MultiplyVis:
 
             dummy_data = [go.Scatter(
                 x=np.arange(5),
-                y=np.arange(5)*np.nan
+                y=np.arange(5) * np.nan
             )]
 
             return {'data': dummy_data, 'layout': layout}, "", \
@@ -264,7 +274,7 @@ class MultiplyVis:
                          component_property='n_clicks')
                    ],
                   [State('unc_data_title', 'children')])
-    def change_titles(n_clicks,n_clicks2, state):
+    def change_titles(n_clicks, n_clicks2, state):
         trigger = dash.callback_context.triggered[0]
         if n_clicks:
             if trigger['prop_id'] == 'select2.n_clicks':
@@ -352,7 +362,7 @@ class MultiplyVis:
                 ),
                 uirevision='no'
             )
-            return {'data': dummy_data, 'layout': layout},\
+            return {'data': dummy_data, 'layout': layout}, \
                    {'data': dummy_data, 'layout': layout}, 0, 0, 0, 0
 
         if trigger['prop_id'] == 'core-map.relayoutData' and core_map is not \
@@ -368,7 +378,7 @@ class MultiplyVis:
                     pitch=core_relayout_data['mapbox.pitch'],
                     zoom=core_relayout_data['mapbox.zoom'],
                     style='light'
-                    )
+                )
 
                 core_map['layout']['mapbox'] = mapbox
                 unc_map['layout']['mapbox'] = mapbox
@@ -389,7 +399,7 @@ class MultiplyVis:
                     pitch=unc_relayout_data['mapbox.pitch'],
                     zoom=unc_relayout_data['mapbox.zoom'],
                     style='light'
-                    )
+                )
 
                 core_map['layout']['mapbox'] = mapbox
                 unc_map['layout']['mapbox'] = mapbox
@@ -408,7 +418,6 @@ class MultiplyVis:
             except:
                 maxmin = []
                 for i in range(4):
-
                     maxmin.append(float(0.0))
 
         if trigger['prop_id'] == 'time-slider.value' and \
@@ -641,7 +650,6 @@ class MultiplyVis:
 
 
 if __name__ == "__main__":
-
     MultiplyVis()
 
     # MultiplyVis(os.path.abspath('../data_2/kafkaout_Barrax_Q1_noprior_S2/'))

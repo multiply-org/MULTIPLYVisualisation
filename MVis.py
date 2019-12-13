@@ -27,9 +27,11 @@ if __name__ == "__main__":
 
     #MultiplyVis()
 
-    if len(sys.argv) == 2 :
+    print(len(sys.argv))
+
+    if len(sys.argv) == 3 :
         show(sys.argv[1], sys.argv[2].lower() == 'true')
-    elif len(sys.argv) == 3 :
+    elif len(sys.argv) == 4 :
         show(sys.argv[1], sys.argv[2].lower()=='true', sys.argv[3])
     else:
         show()

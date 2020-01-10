@@ -51,7 +51,7 @@ class Plots:
         """
         timesteps = self.dh.get_timesteps(param)
 
-        if len(timesteps) == 1:
+        if len(timesteps) < 4:
             div_value = 1
             _step=0
         else:

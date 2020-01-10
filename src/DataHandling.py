@@ -67,7 +67,10 @@ class DataHandling:
 
                     # Get an ordered list of all the filenames
                     # Todo test that the system is robust to these values not being sorted.
-                    filenames = sorted(glob.glob(f'{self.data_directory}/{param}_A???????{var}.tif'))
+                    filenames = sorted(glob.glob(f'{self.data_directory}/{param}*_A???????{var}.tif'))
+
+                    if len(filenames) == 0:
+                        continue
 
                     # BUild the file
                     gd = gdal.BuildVRT(vrt_filename, filenames, options=vrt_options)
@@ -153,9 +156,14 @@ class DataHandling:
         xarray_core.time.values = self.__extract_timesteps_from_gdal(param, '')
 
         # Load uncertainty values
-        xarray_unc = xr.open_rasterio(f"{self.data_directory}/{param}_unc_warped.vrt")
-        xarray_unc = xarray_unc.rename({'band': 'time', 'x': 'longitude', 'y': 'latitude'})
-        xarray_unc.time.values = self.__extract_timesteps_from_gdal(param, '_unc')
+        unc_file = f"{self.data_directory}/{param}_unc_warped.vrt"
+        if os.path.exists(unc_file):
+            xarray_unc = xr.open_rasterio(unc_file)
+            xarray_unc = xarray_unc.rename({'band': 'time', 'x': 'longitude', 'y': 'latitude'})
+            xarray_unc.time.values = self.__extract_timesteps_from_gdal(param, '_unc')
+        else:
+            xarray_unc = xarray_core.copy(deep=True)
+            xarray_unc *= 0.2
 
         # Calculate min and max values
         xarray_min = xarray_core - xarray_unc
@@ -186,7 +194,7 @@ class DataHandling:
         filenames = [f.split('/')[-1] for f in filelist]
 
         # Extract the numerical part of each name as a datestring
-        datestrings = [(re.findall('\d+', file))[0] for file in filenames]
+        datestrings = [(re.findall('\d+', file))[-1] for file in filenames]
 
         # Convert these datestrings into datetimes
         try:
